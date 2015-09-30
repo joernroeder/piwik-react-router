@@ -1,29 +1,38 @@
 {
-	"name": "piwik-react-router",
-	"version": "0.0.1",
-	"description": "Piwik analytics component for react-router",
-	"keywords": ["react", "piwik", "router", "react-router", "analytics", "tracking"],
-	"main": "index.js",
-	"author": "Jörn Röder <me@joernroeder.de>",
-	"maintainers": [{
-		"name": "Jörn Röder",
-		"email": "me@joernroeder.de",
-		"web": "http://joernroeder.de"
-	}],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/joernroeder/piwik-react-router.git"
-	},
-	"bugs": {
-		"url": "https://github.com/joernroeder/piwik-react-router/issues"
-	},
-	"peerDependencies": {
-		"react-router": "^0.13.x"
-	},
-	"licenses": [
-		{
-			"type": "MIT",
-			"url": "http://www.opensource.org/licenses/mit-license.php"
-		}
-	]
+  "name": "piwik-react-router",
+  "version": "0.0.2",
+  "description": "Piwik analytics component for react-router",
+  "keywords": [
+    "react",
+    "piwik",
+    "router",
+    "react-router",
+    "analytics",
+    "tracking"
+  ],
+  "main": "index.js",
+  "author": "Jörn Röder <me@joernroeder.de>",
+  "maintainers": [
+    {
+      "name": "Jörn Röder",
+      "email": "me@joernroeder.de",
+      "web": "http://joernroeder.de"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joernroeder/piwik-react-router.git"
+  },
+  "bugs": {
+    "url": "https://github.com/joernroeder/piwik-react-router/issues"
+  },
+  "peerDependencies": {
+    "react-router": "^0.13.x"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ]
 }
