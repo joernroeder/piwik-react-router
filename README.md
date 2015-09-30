@@ -64,4 +64,4 @@ Tracks the given error as a new [Piwik Event](http://piwik.org/docs/event-tracki
 
 ## A note on serverside rendering
 
-Piwik tracking is disabled for serverside rendering and all API methods are replaced with noop-functions so you don't have to care about it.
+Piwik tracking is disabled for serverside rendering and all API methods are replaced with noop-functions so you don't have to worry about it.
