@@ -1,6 +1,6 @@
 'use strict';
 
-var warning = require('react/lib/warning');
+var warning = require('warning');
 
 // api shim. used for serverside rendering and misconfigured tracker instances
 var apiShim = {
@@ -16,7 +16,7 @@ var PiwikTracker = function(opts) {
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true); 
 
 	if (!opts.url || !opts.siteId) {
-		warning('PiwikTracker cannot be initialized! You haven\'t passed a url and sideId to it.');
+		warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and sideId to it.');
 		return apiShim;
 	}
 

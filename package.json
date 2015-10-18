@@ -34,5 +34,8 @@
       "type": "MIT",
       "url": "http://www.opensource.org/licenses/mit-license.php"
     }
-  ]
+  ],
+  "dependencies": {
+    "warning": "^2.1.0"
+  }
 }
