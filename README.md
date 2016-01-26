@@ -26,10 +26,11 @@ Simply create your instance with the same `url` and `siteId` as described in the
 		siteId		: 1
 	});
 	
-	Router.run(routes, function (Handler, state) {
-		React.render(<Handler/>, document.body);
-		piwik.track(state);
-	});
+	<Router history={piwik.connectToHistory(history)}>
+		<Route path="/" component={MyComponent} />
+	</Router>
+	
+If you're using react-router prior to 2.0 please head over to the [react-router0.13.x branch](https://github.com/joernroeder/piwik-react-router/tree/react-router0.13.x).
 
 ## Options
 
@@ -52,7 +53,7 @@ see [http://davidwalsh.name/track-errors-google-analytics](http://davidwalsh.nam
 
 ### track (ReactRouterState state)
 
-Adds a page view from a react-router [state object](https://github.com/rackt/react-router/blob/master/docs/api/run.md#callbackhandler-state).
+Adds a page view from a react-router [state object](https://github.com/rackt/react-router/blob/master/docs/api/run.md#callbackhandler-state) if the path changed.
 
 ### push (args)
 
@@ -61,6 +62,10 @@ Pushes the specified args to the Piwik tracker the same way as you're using the 
 ### trackError (error, [eventName])
 
 Tracks the given error as a new [Piwik Event](http://piwik.org/docs/event-tracking/#tracking-events) for the given event name. If you don't specify any name here it will fallback to `JavaScript Error`.
+
+### connectToHistory(history)
+
+Adds a listener to the passed in history object and triggers `track(state)` on every history change.
 
 ## A note on serverside rendering
 
