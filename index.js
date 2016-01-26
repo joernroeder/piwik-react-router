@@ -6,8 +6,11 @@ var warning = require('warning');
 var apiShim = {
 	track: function () {},
 	push: function (args) {},
-	trackError: function (e) {}
+	trackError: function (e) {},
+	connectToHistory: function (history) { return history; }
 };
+
+var previousPath = null;
 
 var PiwikTracker = function(opts) {
 	opts = opts || {};
@@ -26,11 +29,19 @@ var PiwikTracker = function(opts) {
 	 * Adds a page view for the the given react-router state
 	 */
 	var track = function track (state) {
+		var currentPath = state.path;
+
+		if (previousPath === currentPath) {
+			return;
+		}
+
 		if (opts.updateDocumentTitle) {
 			_paq.push(['setDocumentTitle', document.title]);
 		}
-		_paq.push(['setCustomUrl', state.path]);
+		_paq.push(['setCustomUrl', currentPath]);
 		_paq.push(['trackPageView']);
+
+		previousPath = currentPath;
 	};
 
 	/**
@@ -57,6 +68,16 @@ var PiwikTracker = function(opts) {
 			e.message,
 			e.filename + ':  ' + e.lineno
 		]);
+	};
+
+	var connectToHistory = function (history) {
+		history.listen(function (state) {
+			state.path = state.pathname + state.search;
+
+			track(state);
+		});
+
+		return history;
 	};
 
 	if (opts.trackErrors) {
@@ -89,7 +110,8 @@ var PiwikTracker = function(opts) {
 	return {
 		track: track,
 		push: push,
-		trackError: trackError
+		trackError: trackError,
+		connectToHistory: connectToHistory
 	};
 };
 
