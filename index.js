@@ -7,10 +7,12 @@ var apiShim = {
 	track: function () {},
 	push: function (args) {},
 	trackError: function (e) {},
-	connectToHistory: function (history) { return history; }
+	connectToHistory: function (history) { return history; },
+	disconnectFromHistory: function () {}
 };
 
 var previousPath = null;
+var unlistenFromHistory = null;
 
 var PiwikTracker = function(opts) {
 	opts = opts || {};
@@ -26,10 +28,10 @@ var PiwikTracker = function(opts) {
 	window['_paq'] = window['_paq'] || [];
 
 	/**
-	 * Adds a page view for the the given react-router state
+	 * Adds a page view for the the given location
 	 */
-	var track = function track (state) {
-		var currentPath = state.path;
+	var track = function track (loc) {
+		var currentPath = loc.path || (loc.pathname + loc.search);
 
 		if (previousPath === currentPath) {
 			return;
@@ -71,13 +73,17 @@ var PiwikTracker = function(opts) {
 	};
 
 	var connectToHistory = function (history) {
-		history.listen(function (state) {
-			state.path = state.pathname + state.search;
-
-			track(state);
+		unlistenFromHistory = history.listen(function (loc) {
+			track(loc);
 		});
 
 		return history;
+	};
+	
+	var disconnectFromHistory = function () {
+		if (unlistenFromHistory) {
+			unlistenFromHistory();
+		}
 	};
 
 	if (opts.trackErrors) {
@@ -111,7 +117,8 @@ var PiwikTracker = function(opts) {
 		track: track,
 		push: push,
 		trackError: trackError,
-		connectToHistory: connectToHistory
+		connectToHistory: connectToHistory,
+		disconnectFromHistory: disconnectFromHistory
 	};
 };
 
