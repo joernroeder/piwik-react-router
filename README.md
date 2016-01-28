@@ -23,16 +23,18 @@ Simply create your instance with the same `url` and `siteId` as described in the
 
 _Starting with v2.0 react-router won't provide a default history. [Why?](https://github.com/rackt/react-router/blob/master/upgrade-guides/v2.0.0.md#no-default-history)_.
 
-	var PiwikReactRouter = require('piwik-react-router');
+```jsx
+var PiwikReactRouter = require('piwik-react-router');
 	
-	var piwik = PiwikReactRouter({
-		url			: 'your-piwik-installation.com',
-		siteId		: 1
-	});
+var piwik = PiwikReactRouter({
+	url			: 'your-piwik-installation.com',
+	siteId		: 1
+});
 	
-	<Router history={piwik.connectToHistory(history)}>
-		<Route path="/" component={MyComponent} />
-	</Router>
+<Router history={piwik.connectToHistory(history)}>
+	<Route path="/" component={MyComponent} />
+</Router>
+```
 	
 If you're using react-router prior to v1.0 please head over to the [react-router0.13.x branch](/joernroeder/piwik-react-router/tree/react-router0.13.x).
 
