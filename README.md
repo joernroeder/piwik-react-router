@@ -36,7 +36,7 @@ var piwik = PiwikReactRouter({
 </Router>
 ```
 	
-If you're using react-router prior to v1.0 please head over to the [react-router0.13.x branch](/joernroeder/piwik-react-router/tree/react-router0.13.x).
+If you're using react-router prior to v1.0 please head over to the [react-router0.13.x branch](https://github.com/joernroeder/piwik-react-router/tree/react-router0.13.x).
 
 
 ## Options
