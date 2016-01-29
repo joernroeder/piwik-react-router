@@ -6,8 +6,13 @@ var warning = require('warning');
 var apiShim = {
 	track: function () {},
 	push: function (args) {},
-	trackError: function (e) {}
+	trackError: function (e) {},
+	connectToHistory: function (history) { return history; },
+	disconnectFromHistory: function () {}
 };
+
+var previousPath = null;
+var unlistenFromHistory = null;
 
 var PiwikTracker = function(opts) {
 	opts = opts || {};
@@ -23,14 +28,22 @@ var PiwikTracker = function(opts) {
 	window['_paq'] = window['_paq'] || [];
 
 	/**
-	 * Adds a page view for the the given react-router state
+	 * Adds a page view for the the given location
 	 */
-	var track = function track (state) {
+	var track = function track (loc) {
+		var currentPath = loc.path || (loc.pathname + loc.search);
+
+		if (previousPath === currentPath) {
+			return;
+		}
+
 		if (opts.updateDocumentTitle) {
 			_paq.push(['setDocumentTitle', document.title]);
 		}
-		_paq.push(['setCustomUrl', state.path]);
+		_paq.push(['setCustomUrl', currentPath]);
 		_paq.push(['trackPageView']);
+
+		previousPath = currentPath;
 	};
 
 	/**
@@ -57,6 +70,20 @@ var PiwikTracker = function(opts) {
 			e.message,
 			e.filename + ':  ' + e.lineno
 		]);
+	};
+
+	var connectToHistory = function (history) {
+		unlistenFromHistory = history.listen(function (loc) {
+			track(loc);
+		});
+
+		return history;
+	};
+	
+	var disconnectFromHistory = function () {
+		if (unlistenFromHistory) {
+			unlistenFromHistory();
+		}
 	};
 
 	if (opts.trackErrors) {
@@ -89,7 +116,9 @@ var PiwikTracker = function(opts) {
 	return {
 		track: track,
 		push: push,
-		trackError: trackError
+		trackError: trackError,
+		connectToHistory: connectToHistory,
+		disconnectFromHistory: disconnectFromHistory
 	};
 };
 
