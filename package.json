@@ -1,6 +1,6 @@
 {
   "name": "piwik-react-router",
-  "version": "0.0.3",
+  "version": "0.2.0",
   "description": "Piwik analytics component for react-router",
   "keywords": [
     "react",
