@@ -27,7 +27,7 @@
     "url": "https://github.com/joernroeder/piwik-react-router/issues"
   },
   "peerDependencies": {
-    "react-router": "^2.0.x"
+    "react-router": "^2.5.2"
   },
   "licenses": [
     {
