@@ -21,7 +21,7 @@ var PiwikTracker = function(opts) {
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 
 	if (!opts.url || !opts.siteId) {
-		warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and sideId to it.');
+		warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and siteId to it.');
 		return apiShim;
 	}
 
@@ -101,7 +101,6 @@ var PiwikTracker = function(opts) {
 	// piwik initializer
 	(function() {
 		var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
-		var _paq = _paq || window['_paq'] || [];  // make sure it exists, use case is within a test script
 
 		_paq.push(['setSiteId', opts.siteId]);
 		_paq.push(['setTrackerUrl', u+'piwik.php']);
