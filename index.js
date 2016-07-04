@@ -21,7 +21,12 @@ var PiwikTracker = function(opts) {
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 
 	if (!opts.url || !opts.siteId) {
-		warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and siteId to it.');
+
+		// Only return warning if this is not in the test environment
+		if ( process && process.env && process.env.NODE_ENV && process.env.NODE_ENV !== 'test') {
+			warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and siteId to it.');
+		}
+
 		return apiShim;
 	}
 
