@@ -38,6 +38,8 @@ var piwik = PiwikReactRouter({
 	
 If you're using react-router prior to v1.0 please head over to the [react-router0.13.x branch](https://github.com/joernroeder/piwik-react-router/tree/react-router0.13.x).
 
+For the url-option you can also include `http://` or `https://` in the beginning of the url, if you piwik installation is on ssl, but your react-site is not, or visa versa.
+
 
 ## Options
 
