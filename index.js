@@ -100,7 +100,12 @@ var PiwikTracker = function(opts) {
 
 	// piwik initializer
 	(function() {
-		var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
+    if (opts.url.indexOf('http://') !== -1 || opts.url.indexOf('https://') !== -1) {
+      var u = opts.url + '/';
+    } else {
+      var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
+    }
+		
 		_paq.push(['setSiteId', opts.siteId]);
 		_paq.push(['setTrackerUrl', u+'piwik.php']);
 
