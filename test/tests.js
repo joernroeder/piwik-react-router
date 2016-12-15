@@ -1,5 +1,5 @@
-var assert = require('assert');
 var piwikReactRouter = require('../');
+const assert = require('chai').assert;
 
 describe('piwikReactRouter', () => {
 
