@@ -15,15 +15,18 @@ var previousPath = null;
 var unlistenFromHistory = null;
 
 var PiwikTracker = function(opts) {
+  var getEnvironment = function () {
+    return process && process.env && process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
+  };
+
 	opts = opts || {};
 	opts.trackErrors = ((opts.trackErrors !== undefined) ? opts.trackErrors : false);
 	opts.enableLinkTracking = ((opts.enableLinkTracking !== undefined) ? opts.enableLinkTracking : true);
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 
 	if (!opts.url || !opts.siteId) {
-
-		// Only return warning if this is not in the test environment
-		if ( process && process.env && process.env.NODE_ENV && process.env.NODE_ENV !== 'test') {
+		// Only return warning if this is not in the test environment as it can break the Tests/CI.
+		if (getEnvironment() !== 'test') {
 			warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and siteId to it.');
 		}
 
@@ -33,7 +36,7 @@ var PiwikTracker = function(opts) {
 	window['_paq'] = window['_paq'] || [];
 
 	/**
-	 * Adds a page view for the the given location
+	 * Adds a page view for the given location
 	 */
 	var track = function track (loc) {
 		var currentPath = loc.path || (loc.pathname + loc.search);
@@ -77,6 +80,9 @@ var PiwikTracker = function(opts) {
 		]);
 	};
 
+	/**
+	 * Connects to the given history
+	 */
 	var connectToHistory = function (history) {
 		unlistenFromHistory = history.listen(function (loc) {
 			track(loc);
@@ -85,6 +91,9 @@ var PiwikTracker = function(opts) {
 		return history;
 	};
 
+	/**
+	 * Disconnects from a previous connected history
+	 */
 	var disconnectFromHistory = function () {
 		if (unlistenFromHistory) {
 			unlistenFromHistory();
@@ -110,7 +119,7 @@ var PiwikTracker = function(opts) {
     } else {
       var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
     }
-		
+
 		_paq.push(['setSiteId', opts.siteId]);
 		_paq.push(['setTrackerUrl', u+'piwik.php']);
 
