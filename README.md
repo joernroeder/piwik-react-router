@@ -2,6 +2,7 @@
 
 [![npm package](https://img.shields.io/npm/v/piwik-react-router.svg?style=flat-square)](https://www.npmjs.org/package/piwik-react-router)
 [![dependency status](https://img.shields.io/david/peer/joernroeder/piwik-react-router.svg?style=flat-square)](https://david-dm.org/joernroeder/piwik-react-router)
+[![Build Status](https://travis-ci.org/joernroeder/piwik-react-router.svg?branch=master)](https://travis-ci.org/joernroeder/piwik-react-router)
 
 [Piwik](https://piwik.org) analytics component for [react-router](https://github.com/rackt/react-router)
 
