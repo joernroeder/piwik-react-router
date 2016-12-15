@@ -12,8 +12,9 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha ./test/",
-    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*"
+    "test": "./node_modules/mocha/bin/mocha ./test/*.js",
+    "watch": "npm test -- --watch",
+    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*.js"
   },
   "author": "Jörn Röder <me@joernroeder.de>",
   "maintainers": [
