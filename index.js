@@ -20,12 +20,12 @@ var PiwikTracker = function(opts) {
     return process && process.env && process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
   };
 
-	opts = opts || {};
+  opts = opts || {};
 	opts.trackErrors = ((opts.trackErrors !== undefined) ? opts.trackErrors : false);
 	opts.enableLinkTracking = ((opts.enableLinkTracking !== undefined) ? opts.enableLinkTracking : true);
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 
-	if (!opts.url || !opts.siteId) {
+  if (!opts.url || !opts.siteId) {
 		// Only return warning if this is not in the test environment as it can break the Tests/CI.
 		if (getEnvironment() !== 'test') {
 			warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and siteId to it.');
