@@ -43,6 +43,7 @@
     "warning": "^2.1.0"
   },
   "devDependencies": {
+    "coveralls": "^2.11.15",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0"
   }
