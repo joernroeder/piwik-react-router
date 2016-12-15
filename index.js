@@ -18,10 +18,15 @@ var PiwikTracker = function(opts) {
 	opts = opts || {};
 	opts.trackErrors = ((opts.trackErrors !== undefined) ? opts.trackErrors : false);
 	opts.enableLinkTracking = ((opts.enableLinkTracking !== undefined) ? opts.enableLinkTracking : true);
-	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true); 
+	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 
 	if (!opts.url || !opts.siteId) {
-		warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and sideId to it.');
+
+		// Only return warning if this is not in the test environment
+		if ( process && process.env && process.env.NODE_ENV && process.env.NODE_ENV !== 'test') {
+			warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and siteId to it.');
+		}
+
 		return apiShim;
 	}
 
@@ -47,7 +52,7 @@ var PiwikTracker = function(opts) {
 	};
 
 	/**
-	 * Pushes the specified args to the piwik tracker. 
+	 * Pushes the specified args to the piwik tracker.
 	 * You can use this method as the low-level api to call methods from the piwik API or call custom functions
 	 *
 	 * @see https://developer.piwik.org/guides/tracking-javascript-guide
@@ -58,12 +63,12 @@ var PiwikTracker = function(opts) {
 
 	/**
 	 * Tracks occurring javascript errors as a `JavaScript Error` piwik event.
-	 * 
+	 *
 	 * @see http://davidwalsh.name/track-errors-google-analytics
 	 */
 	var trackError = function trackError (e, eventName) {
 		eventName = eventName || 'JavaScript Error';
-		
+
 		push([
 			'trackEvent',
 			eventName,
@@ -79,7 +84,7 @@ var PiwikTracker = function(opts) {
 
 		return history;
 	};
-	
+
 	var disconnectFromHistory = function () {
 		if (unlistenFromHistory) {
 			unlistenFromHistory();
