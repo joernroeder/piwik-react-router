@@ -4,6 +4,7 @@ var warning = require('warning');
 
 // api shim. used for serverside rendering and misconfigured tracker instances
 var apiShim = {
+  _isShim: true,
 	track: function () {},
 	push: function (args) {},
 	trackError: function (e) {},
@@ -133,6 +134,7 @@ var PiwikTracker = function(opts) {
 
 	// return api
 	return {
+    _isShim: false,
 		track: track,
 		push: push,
 		trackError: trackError,
