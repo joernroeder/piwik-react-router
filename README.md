@@ -3,6 +3,7 @@
 [![npm package](https://img.shields.io/npm/v/piwik-react-router.svg?style=flat-square)](https://www.npmjs.org/package/piwik-react-router)
 [![dependency status](https://img.shields.io/david/peer/joernroeder/piwik-react-router.svg?style=flat-square)](https://david-dm.org/joernroeder/piwik-react-router)
 [![Build Status](https://travis-ci.org/joernroeder/piwik-react-router.svg?branch=master)](https://travis-ci.org/joernroeder/piwik-react-router)
+[![Coverage Status](https://coveralls.io/repos/github/joernroeder/piwik-react-router/badge.svg?branch=master)](https://coveralls.io/github/joernroeder/piwik-react-router?branch=master)
 
 [Piwik](https://piwik.org) analytics component for [react-router](https://github.com/rackt/react-router)
 
@@ -20,23 +21,23 @@
 
 ## Usage
 
-Simply create your instance with the same `url` and `siteId` as described in the piwik [documentation](https://developer.piwik.org/guides/tracking-javascript-guide) and connect it to your `history` object. 
+Simply create your instance with the same `url` and `siteId` as described in the piwik [documentation](https://developer.piwik.org/guides/tracking-javascript-guide) and connect it to your `history` object.
 
 _Starting with v2.0 react-router won't provide a default history. [Why?](https://github.com/rackt/react-router/blob/master/upgrade-guides/v2.0.0.md#no-default-history)_.
 
 ```jsx
 var PiwikReactRouter = require('piwik-react-router');
-	
+
 var piwik = PiwikReactRouter({
 	url			: 'your-piwik-installation.com',
 	siteId		: 1
 });
-	
+
 <Router history={piwik.connectToHistory(history)}>
 	<Route path="/" component={MyComponent} />
 </Router>
 ```
-	
+
 If you're using react-router prior to v1.0 please head over to the [react-router0.13.x branch](https://github.com/joernroeder/piwik-react-router/tree/react-router0.13.x).
 
 For the url-option you can also include `http://` or `https://` in the beginning of the url, if you piwik installation is on ssl, but your react-site is not, or visa versa.
