@@ -83,4 +83,36 @@ describe('piwikReactRouter', function () {
     ]);
   });
 
+  it ('should correctly connect to the history', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'foo.bar',
+      siteId: 1,
+    });
+
+    const unlistenFn = sinon.spy();
+    let listenStub = sinon.stub().returns(unlistenFn);
+
+    const history = {
+      listen: listenStub
+    };
+
+    // it should call the history.listen function once.
+    piwikReactRouter.connectToHistory(history);
+    assert.isTrue(listenStub.calledOnce);
+
+    // it should correctly call the unlisten function which was returned by the .listen method
+    assert.isFalse(unlistenFn.called);
+    piwikReactRouter.disconnectFromHistory();
+    assert.isTrue(unlistenFn.calledOnce);
+
+    // it should correctly forward the given location to the track method
+    const loc = { path: '/foo/bar.html' };
+    listenStub.getCall(0).args[0](loc);
+
+    assert.includeDeepMembers(window._paq, [
+      [ 'setCustomUrl', '/foo/bar.html' ],
+      [ 'trackPageView' ]
+    ]);
+  });
+
 });
