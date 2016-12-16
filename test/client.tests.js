@@ -49,6 +49,19 @@ describe('piwikReactRouter', function () {
     ]);
   });
 
+  it ('should correctly use the passed in url protocol ', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'https://foo.bar',
+      siteId: 1
+    });
+
+    assert.sameDeepMembers(window._paq, [
+      [ 'setSiteId', 1 ],
+      [ 'setTrackerUrl', 'https://foo.bar/piwik.php' ],
+      [ 'enableLinkTracking' ]
+    ]);
+  });
+
   // todo: test warning
   it ('should correctly warn about invalid options and return the api shim', () => {
     assert.isTrue(testUtils.requireNoCache('../')()._isShim);
