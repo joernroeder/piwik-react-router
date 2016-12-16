@@ -99,13 +99,43 @@ describe('piwikReactRouter', function () {
     // it should call the history.listen function once.
     piwikReactRouter.connectToHistory(history);
     assert.isTrue(listenStub.calledOnce);
+  });
 
-    // it should correctly call the unlisten function which was returned by the .listen method
+  it ('should correctly call the unlisten function which was returned by the .listen method', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'foo.bar',
+      siteId: 1,
+    });
+
+    const unlistenFn = sinon.spy();
+    let listenStub = sinon.stub().returns(unlistenFn);
+
+    const history = {
+      listen: listenStub
+    };
+
+    piwikReactRouter.connectToHistory(history);
+
     assert.isFalse(unlistenFn.called);
     piwikReactRouter.disconnectFromHistory();
     assert.isTrue(unlistenFn.calledOnce);
+  });
 
-    // it should correctly forward the given location to the track method
+  it ('should correctly forward the given location to the track method', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'foo.bar',
+      siteId: 1,
+    });
+
+    const unlistenFn = sinon.spy();
+    let listenStub = sinon.stub().returns(unlistenFn);
+
+    const history = {
+      listen: listenStub
+    };
+
+    piwikReactRouter.connectToHistory(history);
+
     const loc = { path: '/foo/bar.html' };
     listenStub.getCall(0).args[0](loc);
 
@@ -113,6 +143,12 @@ describe('piwikReactRouter', function () {
       [ 'setCustomUrl', '/foo/bar.html' ],
       [ 'trackPageView' ]
     ]);
+
+    const len = window._paq.length;
+
+    // the path didn't change and the track function should not be called.
+    listenStub.getCall(0).args[0](loc);
+    assert.strictEqual(len, window._paq.length);
   });
 
 });
