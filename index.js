@@ -77,7 +77,7 @@ var PiwikTracker = function(opts) {
 			'trackEvent',
 			eventName,
 			e.message,
-			e.filename + ':  ' + e.lineno
+			e.filename + ': ' + e.lineno
 		]);
 	};
 
