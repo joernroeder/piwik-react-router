@@ -1,4 +1,5 @@
 const assert = require('chai').assert;
+const sinon = require('sinon');
 
 const testUtils = require('./utils.js');
 
