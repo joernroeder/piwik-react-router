@@ -29,6 +29,10 @@ describe('piwikReactRouter', function () {
     ].concat(testUtils.API_METHOD_NAMES));
 
     assert.isFalse(piwikReactRouter._isShim);
+
+    testUtils.API_METHOD_NAMES.forEach(methodName => {
+      assert.isFunction(piwikReactRouter[methodName]);
+    });
   });
 
   it ('should correctly push the trackerUrl and siteId to the _paq array on instantiation', () => {
@@ -62,13 +66,19 @@ describe('piwikReactRouter', function () {
       trackErrors: true
     });
 
-    piwikReactRouter.trackError(new Error('unknown error'));
+    let err = new Error('unknown error');
+    err.filename = 'foo.js';
+    err.lineno = 10;
+
+    piwikReactRouter.trackError(err);
 
     assert.includeDeepMembers(window._paq, [
-      ['trackEvent',
-      'JavaScript Error',
-      'unknown error',
-      'undefined:  undefined' ]
+      [
+        'trackEvent',
+        'JavaScript Error',
+        'unknown error',
+        'foo.js: 10'
+      ]
     ]);
   });
 
