@@ -47,10 +47,10 @@ var PiwikTracker = function(opts) {
 		}
 
 		if (opts.updateDocumentTitle) {
-			window._paq.push(['setDocumentTitle', document.title]);
+			push(['setDocumentTitle', document.title]);
 		}
-		window._paq.push(['setCustomUrl', currentPath]);
-		window._paq.push(['trackPageView']);
+		push(['setCustomUrl', currentPath]);
+		push(['trackPageView']);
 
 		previousPath = currentPath;
 	};
@@ -121,11 +121,11 @@ var PiwikTracker = function(opts) {
       var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
     }
 
-		window._paq.push(['setSiteId', opts.siteId]);
-		window._paq.push(['setTrackerUrl', u+'piwik.php']);
+		push(['setSiteId', opts.siteId]);
+		push(['setTrackerUrl', u+'piwik.php']);
 
 		if (opts.enableLinkTracking) {
-			window._paq.push(['enableLinkTracking']);
+			push(['enableLinkTracking']);
 		}
 
 		var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+'piwik.js';
