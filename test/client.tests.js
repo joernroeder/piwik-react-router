@@ -4,13 +4,17 @@ const sinon = require('sinon');
 const testUtils = require('./utils.js');
 
 describe('piwik-react-router client tests', function () {
-  beforeEach(() => {
-    this.jsdom = require('jsdom-global')();
+  let jsdomBody;
 
+  beforeEach(() => {
     // piwiks tracking client doesn't properly adds the script tag to jsdom or the other way around.
     // As i won't modify the piwik loading script the easiest was to provide this hacky script tag.
     // Dirty – i know ;)
-    document.body.innerHTML = '<script></script>';
+    jsdomBody = '<script></script>';
+
+    this.jsdom = require('jsdom-global')(jsdomBody, {
+      url: 'http://foo.bar'
+    });
   });
 
   afterEach(() => {
@@ -64,45 +68,96 @@ describe('piwik-react-router client tests', function () {
     ]);
   });
 
-  /*it ('should correctly use https as the protocol', () => {
-    window.location.protocol = 'https:';
-
-    console.log('window.location.protocol', window.location.protocol);
-    const piwikReactRouter = testUtils.requireNoCache('../')({
-      url: 'foo.bar',
-      siteId: 1,
+  describe ('use https protocol', () => {
+    before(() => {
+      this.jsdom();
+      this.jsdom = require('jsdom-global')(jsdomBody, {
+        url: 'https://foo.bar'
+      });
     });
 
-    console.log('window._paq', window._paq);
+    it ('should correctly use https as the protocol', () => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+      });
 
-    assert.includeDeepMembers(window._paq, [
-      [ 'setTrackerUrl', 'https://foo.bar/piwik.php' ],
-    ]);
-  });*/
-
-  it ('should correctly use the passed in url protocol ', () => {
-    const piwikReactRouter = testUtils.requireNoCache('../')({
-      url: 'https://foo.bar',
-      siteId: 1
+      assert.includeDeepMembers(window._paq, [
+        [ 'setTrackerUrl', 'https://foo.bar/piwik.php' ],
+      ]);
     });
 
-    assert.sameDeepMembers(window._paq, [
-      [ 'setSiteId', 1 ],
-      [ 'setTrackerUrl', 'https://foo.bar/piwik.php' ],
-      [ 'enableLinkTracking' ]
-    ]);
+    it ('should correctly use the passed in url protocol ', () => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'https://foo.bar',
+        siteId: 1
+      });
+
+      assert.sameDeepMembers(window._paq, [
+        [ 'setSiteId', 1 ],
+        [ 'setTrackerUrl', 'https://foo.bar/piwik.php' ],
+        [ 'enableLinkTracking' ]
+      ]);
+    });
   });
 
   // todo: test warning
-  it ('should correctly warn about invalid options and return the api shim', () => {
-    assert.isTrue(testUtils.requireNoCache('../')()._isShim);
-    assert.isTrue(testUtils.requireNoCache('../')({
-      url: 'foo.bar'
-    })._isShim);
-    assert.isTrue(testUtils.requireNoCache('../')({
-      siteId: 1
-    })._isShim);
+  describe ('should correctly warn about invalid options and return the api shim', () => {
+    it('should correctly return the shim and throw a warning without parameters', () =>{
+      let warningSpy = sinon.spy();
+      assert.isTrue(testUtils.requireNoCache('../', {
+        'warning': warningSpy
+      })()._isShim);
+      assert.isTrue(warningSpy.calledOnce);
+      assert.include(warningSpy.args[0][1], 'PiwikTracker cannot be initialized');
+    });
+
+    it('should correctly return the shim and throw a warning without the siteId', () =>{
+      let warningSpy = sinon.spy();
+      assert.isTrue(testUtils.requireNoCache('../', {
+        'warning': warningSpy
+      })({
+        url: 'foo.bar'
+      })._isShim);
+      assert.isTrue(warningSpy.calledOnce);
+    });
+
+    it('should correctly return the shim and throw a warning without the url', () =>{
+      let warningSpy = sinon.spy();
+      assert.isTrue(testUtils.requireNoCache('../', {
+        'warning': warningSpy
+      })({
+        siteId: 1
+      })._isShim);
+      assert.isTrue(warningSpy.calledOnce);
+    });
   });
+
+  describe ('it should correctly suppress the warning', () => {
+    let env;
+
+    before(() => {
+      env = process.env;
+      process.env = { NODE_ENV: 'TEST' };
+    });
+
+    after(() => {
+      process.env = env;
+    });
+
+    it ('in test environment', () => {
+      const warningSpy = sinon.spy();
+
+      testUtils.requireNoCache('../', {
+        'warning': warningSpy
+      })();
+
+      assert.isFalse(warningSpy.called);
+    });
+
+  });
+
+  //it ('should correctly warn')
 
   describe ('javascript error', () => {
     it ('should correctly add the given error to _paq array', () => {
@@ -207,8 +262,17 @@ describe('piwik-react-router client tests', function () {
       piwikReactRouter.connectToHistory(history);
 
       assert.isFalse(unlistenFn.called);
-      piwikReactRouter.disconnectFromHistory();
+      assert.isTrue(piwikReactRouter.disconnectFromHistory());
       assert.isTrue(unlistenFn.calledOnce);
+    });
+
+    it ('should correctly ignore the disconnectFromHistory call if it wasn\'t connected before', () => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+      });
+
+      assert.isFalse(piwikReactRouter.disconnectFromHistory());
     });
 
     it ('should correctly forward the given location to the track method', () => {
@@ -241,6 +305,7 @@ describe('piwik-react-router client tests', function () {
     const piwikReactRouter = testUtils.requireNoCache('../')({
       url: 'foo.bar',
       siteId: 1,
+      updateDocumentTitle: false
     });
 
     piwikReactRouter.track({
