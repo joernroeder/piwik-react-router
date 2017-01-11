@@ -1,0 +1,8 @@
+{
+  "github": {
+    "release": true,
+    "releaseName": "Release %s",
+    "tokenRef": "RELEASE_IT_GITHUB_ACCESS_TOKEN"
+  },
+  "changelogCommand": "git log --pretty=format:'* %s (%h)' [REV_RANGE]"
+}
