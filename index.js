@@ -98,7 +98,10 @@ var PiwikTracker = function(opts) {
 	var disconnectFromHistory = function () {
 		if (unlistenFromHistory) {
 			unlistenFromHistory();
+      return true;
 		}
+
+    return false;
 	};
 
 	if (opts.trackErrors) {

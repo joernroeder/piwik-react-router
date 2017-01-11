@@ -89,7 +89,7 @@ Adds a listener to the passed in `history` and triggers `track(location)` whenev
 
 ### disconnectFromHistory()
 
-Disconnects Piwik from a previous connected history.
+Disconnects Piwik from a previous connected history. Returns whether it could successfully disconnect.
 
 
 ## A note on serverside rendering
