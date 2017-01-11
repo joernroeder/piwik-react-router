@@ -6,6 +6,7 @@
     "react",
     "piwik",
     "router",
+    "history",
     "react-router",
     "analytics",
     "tracking"
@@ -37,6 +38,9 @@
       "url": "http://www.opensource.org/licenses/mit-license.php"
     }
   ],
+  "peerDependencies": {
+    "history": "^4.0.0"
+  },
   "dependencies": {
     "warning": "^2.1.0"
   },
