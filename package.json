@@ -48,8 +48,8 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.15",
     "istanbul": "^0.4.5",
-    "jsdom": "9.8.3",
-    "jsdom-global": "2.1.0",
+    "jsdom": "9.9.1",
+    "jsdom-global": "2.1.1",
     "mocha": "^3.2.0",
     "proxyquire": "^1.7.10",
     "sinon": "^1.17.6"
