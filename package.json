@@ -42,7 +42,7 @@
     "history": "^4.0.0"
   },
   "dependencies": {
-    "warning": "^2.1.0"
+    "warning": "^3.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
