@@ -301,6 +301,32 @@ describe('piwik-react-router client tests', function () {
     });
   });
 
+  it ('should correctly handle basename', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'foo.bar',
+      siteId: 1,
+    });
+
+    const unlistenFn = sinon.spy();
+    let listenStub = sinon.stub().returns(unlistenFn);
+
+    const history = {
+      listen: listenStub
+    };
+
+    piwikReactRouter.connectToHistory(history);
+    listenStub.getCall(0).args[0]({
+      basename: '/baseName',
+      pathname: '/foo/bar.html',
+      search: '?foo=bar'
+    });
+
+    assert.includeDeepMembers(window._paq, [
+      [ 'setCustomUrl', '/baseName/foo/bar.html?foo=bar' ],
+      [ 'trackPageView' ]
+    ]);
+  });
+
   it ('should correctly ignore the second call if the location did not change', () => {
     const piwikReactRouter = testUtils.requireNoCache('../')({
       url: 'foo.bar',
