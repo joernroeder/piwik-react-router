@@ -136,6 +136,10 @@ var PiwikTracker = function(opts) {
 		push(['setSiteId', opts.siteId]);
 		push(['setTrackerUrl', u+'piwik.php']);
 
+		if (opts.userId) {
+			push(['setUserId', opts.userId]);
+		}
+
 		if (opts.enableLinkTracking) {
 			push(['enableLinkTracking']);
 		}

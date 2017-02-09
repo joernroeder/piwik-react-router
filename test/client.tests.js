@@ -55,6 +55,21 @@ describe('piwik-react-router client tests', function () {
     ]);
   });
 
+  it ('should correctly push the userId', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'foo.bar',
+      siteId: 1,
+      userId: 'test_user'
+    });
+
+    assert.sameDeepMembers(window._paq, [
+      [ 'setSiteId', 1 ],
+      [ 'setUserId', 'test_user' ],
+      [ 'setTrackerUrl', 'http://foo.bar/piwik.php' ],
+      [ 'enableLinkTracking' ]
+    ]);
+  });
+
   it ('should correctly disable link tracking', () => {
     const piwikReactRouter = testUtils.requireNoCache('../')({
       url: 'foo.bar',
