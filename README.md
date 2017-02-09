@@ -50,9 +50,14 @@ For the url-option you can also include `http://` or `https://` in the beginning
 [Link tracking](http://developer.piwik.org/api-reference/tracking-javascript#using-the-tracker-object) to track outgoing and download links is enabled by default.
 
 
+### userId: `undefined`
+
+[User ID](http://developer.piwik.org/api-reference/tracking-javascript#using-the-tracker-object) to associate every request with a username or email. More information here: [User ID](http://piwik.org/docs/user-id/)
+
+
 ### updateDocumentTitle: `true`
 
-Updates the document title before adding a new page view as the title may changed during the route rendering. Make sure you call `piwik.track` __after__ React has rendered the `<Handler />` to make this work correctly.  
+Updates the document title before adding a new page view as the title may changed during the route rendering. Make sure you call `piwik.track` __after__ React has rendered the `<Handler />` to make this work correctly.
 If you don't know how to update the title, check out the great [react-document-title](https://github.com/gaearon/react-document-title) module.
 
 
