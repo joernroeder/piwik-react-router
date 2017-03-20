@@ -100,7 +100,6 @@ var PiwikTracker = function(opts) {
 		});
 
         if (!opts.ignoreInitialVisit && history.location) {
-            console.log('tracking initial visit', history.location);
             track(history.location);
         }
 
