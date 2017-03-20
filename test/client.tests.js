@@ -339,6 +339,30 @@ describe('piwik-react-router client tests', function () {
         [ 'trackPageView' ]
       ]);
     });
+
+    it ('should correctly ignore the initial visit if the appropriate option is enabled', () => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+        ignoreInitialVisit: true
+      });
+
+      const unlistenFn = sinon.spy();
+      let listenStub = sinon.stub().returns(unlistenFn);
+
+      const history = {
+        listen: listenStub,
+        location: {
+          pathname: '/foo/bar.html',
+          search: '?foo=bar'
+        }
+      };
+
+      piwikReactRouter.track = sinon.spy();
+      piwikReactRouter.connectToHistory(history);
+
+      assert.isFalse(piwikReactRouter.track.called);
+    });
   });
 
   it ('should correctly handle basename', () => {
