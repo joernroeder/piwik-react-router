@@ -68,6 +68,11 @@ By enabling this option occurring javascript errors will be tracked as a `JavaSc
 see [http://davidwalsh.name/track-errors-google-analytics](http://davidwalsh.name/track-errors-google-analytics) for further details
 
 
+### ignoreInitialVisit: `false`
+
+By enabling `ignoreInitialVisit` it connects to the history without tracking the initial visit.
+
+
 ## API
 
 ### track (Location location)

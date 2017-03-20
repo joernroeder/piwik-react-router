@@ -25,6 +25,7 @@ var PiwikTracker = function(opts) {
 	opts.trackErrors = ((opts.trackErrors !== undefined) ? opts.trackErrors : false);
 	opts.enableLinkTracking = ((opts.enableLinkTracking !== undefined) ? opts.enableLinkTracking : true);
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
+	opts.ignoreInitialVisit = ((opts.ignoreInitialVisit !== undefined) ? opts.ignoreInitialVisit : false);
 
   if (!opts.url || !opts.siteId) {
 		// Only return warning if this is not in the test environment as it can break the Tests/CI.
@@ -97,6 +98,11 @@ var PiwikTracker = function(opts) {
 		unlistenFromHistory = history.listen(function (loc) {
 			track(loc);
 		});
+
+        if (!opts.ignoreInitialVisit && history.location) {
+            console.log('tracking initial visit', history.location);
+            track(history.location);
+        }
 
 		return history;
 	};
