@@ -58,7 +58,7 @@ For the url-option you can also include `http://` or `https://` in the beginning
 ### updateDocumentTitle: `true`
 
 Updates the document title before adding a new page view as the title may changed during the route rendering. Make sure you call `piwik.track` __after__ React has rendered the `<Handler />` to make this work correctly.
-If you don't know how to update the title, check out the great [react-document-title](https://github.com/gaearon/react-document-title) module.
+If you don't know how to update the title, check out the great [react-document-title](https://github.com/gaearon/react-document-title) or [react-helmet](https://github.com/nfl/react-helmet) module.
 
 
 ### trackErrors: `false`
@@ -94,8 +94,7 @@ Tracks the given error as a new [Piwik Event](http://piwik.org/docs/event-tracki
 
 ### connectToHistory(history)
 
-Adds a listener to the passed in `history` and triggers `track(location)` whenever the history changes.
-
+Adds a listener to the passed in `history` and triggers `track(location)` whenever the history changes. Connecting to the history also tracks the location of the initial visit since release `0.7.0` if not manually disabled via [`ignoreInitialVisit`](#ignoreinitialvisit-false)
 
 ### disconnectFromHistory()
 
