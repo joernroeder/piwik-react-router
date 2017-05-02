@@ -11,12 +11,16 @@
 ## Installation
 
 	npm install piwik-react-router --save
+or
+
+	yarn add piwik-react-router
 
 
 ## Features
 
 - asynchronous loading of Piwik
 - javascript error tracking
+- low level access to [`piwik.push()`](#push-args)
 
 
 ## Usage
