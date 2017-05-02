@@ -39,7 +39,7 @@
     }
   ],
   "peerDependencies": {
-    "history": "^3.0.0"
+    "history": "^3.0.0 || ^4.0.0"
   },
   "dependencies": {
     "url-join": "^1.1.0",
