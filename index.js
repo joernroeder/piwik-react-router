@@ -27,6 +27,8 @@ var PiwikTracker = function(opts) {
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 	opts.ignoreInitialVisit = ((opts.ignoreInitialVisit !== undefined) ? opts.ignoreInitialVisit : false);
 	opts.injectScript = ((opts.injectScript !== undefined) ? opts.injectScript : true);
+	opts.clientTrackerName = ((opts.clientTrackerName !== undefined) ? opts.clientTrackerName : 'piwik.js');
+	opts.serverTrackerName = ((opts.serverTrackerName !== undefined) ? opts.serverTrackerName : 'piwik.php');
 
   if (!opts.url || !opts.siteId) {
 		// Only return warning if this is not in the test environment as it can break the Tests/CI.
@@ -140,7 +142,7 @@ var PiwikTracker = function(opts) {
     }
 
 		push(['setSiteId', opts.siteId]);
-		push(['setTrackerUrl', u+'piwik.php']);
+		push(['setTrackerUrl', u+opts.serverTrackerName]);
 
 		if (opts.userId) {
 			push(['setUserId', opts.userId]);

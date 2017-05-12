@@ -83,6 +83,20 @@ describe('piwik-react-router client tests', function () {
     ]);
   });
 
+  it ('should correctly use client and server tracker name defaults', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'foo.bar',
+      siteId: 1
+    });
+
+    assert.sameDeepMembers(window._paq, [
+      [ 'setSiteId', 1 ],
+      [ 'setTrackerUrl', 'http://foo.bar/piwik.php' ],
+      [ 'enableLinkTracking' ]
+    ]);
+    assert.strictEqual(window.document.querySelector('script').src, 'http://foo.bar/piwik.js');
+  });
+
   describe ('use https protocol', () => {
     before(() => {
       this.jsdom();
@@ -113,6 +127,29 @@ describe('piwik-react-router client tests', function () {
         [ 'setTrackerUrl', 'https://foo.bar/piwik.php' ],
         [ 'enableLinkTracking' ]
       ]);
+    });
+  });
+
+  describe ('should allow overriding piwik.js and piwik.php names', () => {
+    before(() => {
+      this.jsdom();
+      this.jsdom = require('jsdom-global')(jsdomBody, {
+        url: 'https://foo.bar'
+      });
+    });
+
+    it('should use specified names for piwik.js and piwik.php', () => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+        clientTrackerName: 'foo.js',
+        serverTrackerName: 'bar.php'
+      });
+
+      assert.includeDeepMembers(window._paq, [
+        ['setTrackerUrl', 'https://foo.bar/bar.php'],
+      ]);
+      assert.strictEqual(window.document.querySelector('script').src, 'https://foo.bar/foo.js');
     });
   });
 

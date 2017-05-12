@@ -33,8 +33,8 @@ _Starting with v2.0 react-router won't provide a default history. [Why?](https:/
 var PiwikReactRouter = require('piwik-react-router');
 
 var piwik = PiwikReactRouter({
-	url			: 'your-piwik-installation.com',
-	siteId		: 1
+	url: 'your-piwik-installation.com',
+	siteId: 1
 });
 
 <Router history={piwik.connectToHistory(history)}>
@@ -80,6 +80,16 @@ By enabling `ignoreInitialVisit` it connects to the history without tracking the
 ### injectScript: `true`
 
 By disabling `injectScript` the piwik.js script will not be injected automatically to allow a separate loading.
+
+
+### clientTrackerName: `'piwik.js'`
+
+The name of the `piwik.js` static resource on the Piwik server. Set this option if the Piwik instance uses a different name.
+
+
+### serverTrackerName: `'piwik.php'`
+
+The name of the `piwik.php` script on the Piwik server. Set this option if the Piwik instance uses a different name.
 
 
 ## API
