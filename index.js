@@ -153,7 +153,7 @@ var PiwikTracker = function(opts) {
 		}
 
 		if (opts.injectScript) {
-			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+'piwik.js';
+			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+opts.clientTrackerName;
 			s.parentNode.insertBefore(g,s);
 		}
 	})();
