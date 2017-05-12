@@ -77,6 +77,11 @@ see [http://davidwalsh.name/track-errors-google-analytics](http://davidwalsh.nam
 By enabling `ignoreInitialVisit` it connects to the history without tracking the initial visit.
 
 
+### injectScript: `true`
+
+By disabling `injectScript` the piwik.js script will not be injected automatically to allow a separate loading.
+
+
 ### clientTrackerName: `'piwik.js'`
 
 The name of the `piwik.js` static resource on the Piwik server. Set this option if the Piwik instance uses a different name.

@@ -26,6 +26,7 @@ var PiwikTracker = function(opts) {
 	opts.enableLinkTracking = ((opts.enableLinkTracking !== undefined) ? opts.enableLinkTracking : true);
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 	opts.ignoreInitialVisit = ((opts.ignoreInitialVisit !== undefined) ? opts.ignoreInitialVisit : false);
+	opts.injectScript = ((opts.injectScript !== undefined) ? opts.injectScript : true);
 	opts.clientTrackerName = ((opts.clientTrackerName !== undefined) ? opts.clientTrackerName : 'piwik.js');
 	opts.serverTrackerName = ((opts.serverTrackerName !== undefined) ? opts.serverTrackerName : 'piwik.php');
 
@@ -151,8 +152,10 @@ var PiwikTracker = function(opts) {
 			push(['enableLinkTracking']);
 		}
 
-		var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+opts.clientTrackerName;
-		s.parentNode.insertBefore(g,s);
+		if (opts.injectScript) {
+			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+'piwik.js';
+			s.parentNode.insertBefore(g,s);
+		}
 	})();
 
 	// return api

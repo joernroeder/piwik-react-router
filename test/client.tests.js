@@ -402,6 +402,38 @@ describe('piwik-react-router client tests', function () {
     });
   });
 
+  describe('should correctly inject piwik script', () => {
+    it ('should inject piwik.js if opts.injectScript is enabled', () => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+        injectScript: true
+      });
+
+      var allScripts = [].slice.call(window.document.scripts);
+      var piwikScripts = allScripts.filter((script) => {
+        return script.src.indexOf('piwik.js') !== -1;
+      });
+
+      assert.isTrue(piwikScripts.length >= 1);
+    });
+
+    it ('should not inject piwik.js if opts.injectScript is disabled', () => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+        injectScript: false
+      });
+
+      var allScripts = [].slice.call(window.document.scripts);
+      var piwikScripts = allScripts.filter((script) => {
+        return script.src.indexOf('piwik.js') !== -1;
+      });
+
+      assert.isTrue(piwikScripts.length === 0);
+    });
+  });
+
   it ('should correctly handle basename', () => {
     const piwikReactRouter = testUtils.requireNoCache('../')({
       url: 'foo.bar',
