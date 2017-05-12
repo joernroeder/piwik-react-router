@@ -26,6 +26,8 @@ var PiwikTracker = function(opts) {
 	opts.enableLinkTracking = ((opts.enableLinkTracking !== undefined) ? opts.enableLinkTracking : true);
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 	opts.ignoreInitialVisit = ((opts.ignoreInitialVisit !== undefined) ? opts.ignoreInitialVisit : false);
+	opts.clientTrackerName = ((opts.clientTrackerName !== undefined) ? opts.clientTrackerName : 'piwik.js');
+	opts.serverTrackerName = ((opts.serverTrackerName !== undefined) ? opts.serverTrackerName : 'piwik.php');
 
   if (!opts.url || !opts.siteId) {
 		// Only return warning if this is not in the test environment as it can break the Tests/CI.
@@ -139,7 +141,7 @@ var PiwikTracker = function(opts) {
     }
 
 		push(['setSiteId', opts.siteId]);
-		push(['setTrackerUrl', u+'piwik.php']);
+		push(['setTrackerUrl', u+opts.serverTrackerName]);
 
 		if (opts.userId) {
 			push(['setUserId', opts.userId]);
@@ -149,7 +151,7 @@ var PiwikTracker = function(opts) {
 			push(['enableLinkTracking']);
 		}
 
-		var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+'piwik.js';
+		var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+opts.clientTrackerName;
 		s.parentNode.insertBefore(g,s);
 	})();
 
