@@ -37,6 +37,10 @@ var piwik = PiwikReactRouter({
 	siteId: 1
 });
 
+/**
+ * Create your history in advance. Please head over to the react-router FAQ for more infos:
+ * @see https://github.com/ReactTraining/react-router/blob/master/FAQ.md#how-do-i-access-the-history-object-outside-of-components
+*/
 <Router history={piwik.connectToHistory(history)}>
 	<Route path="/" component={MyComponent} />
 </Router>
@@ -79,7 +83,7 @@ By enabling `ignoreInitialVisit` it connects to the history without tracking the
 
 ### injectScript: `true`
 
-By disabling `injectScript` the piwik.js script will not be injected automatically to allow a separate loading.
+By disabling `injectScript` the `piwik.js` script will not be injected automatically to allow a separate loading.
 
 
 ### clientTrackerName: `'piwik.js'`
@@ -111,9 +115,20 @@ Pushes the specified args to the Piwik tracker the same way as you're using the 
 Tracks the given error as a new [Piwik Event](http://piwik.org/docs/event-tracking/#tracking-events) for the given event name. If you don't specify any name here it will fallback to `JavaScript Error`.
 
 
-### connectToHistory(history)
+### connectToHistory(history, [modifier])
 
-Adds a listener to the passed in `history` and triggers `track(location)` whenever the history changes. Connecting to the history also tracks the location of the initial visit since release `0.7.0` if not manually disabled via [`ignoreInitialVisit`](#ignoreinitialvisit-false)
+Adds a listener to the passed in `history` to trigger `track(location)` whenever the history changes. The optional modifier function (added in version `0.9.0`) acts as a proxy to allow the modification of the given location before the `track(location)` function is called.
+
+```js
+var modifier = function (location) {
+	location.search = 'campain=ID';
+
+	return location;
+}
+
+<Router history={piwik.connectToHistory(history, modifier)}>
+```
+Connecting to the history also tracks the location of the initial visit since release `0.7.0` if not manually disabled via [`ignoreInitialVisit`](#ignoreinitialvisit-false)
 
 ### disconnectFromHistory()
 

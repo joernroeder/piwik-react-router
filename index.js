@@ -9,7 +9,7 @@ var apiShim = {
 	track: function () {},
 	push: function (args) {},
 	trackError: function (e) {},
-	connectToHistory: function (history) { return history; },
+	connectToHistory: function (history, modifier) { return history; },
 	disconnectFromHistory: function () {}
 };
 
@@ -97,13 +97,26 @@ var PiwikTracker = function(opts) {
 	/**
 	 * Connects to the given history
 	 */
-	var connectToHistory = function (history) {
-		unlistenFromHistory = history.listen(function (loc) {
-			track(loc);
+	var connectToHistory = function (history, modifier) {
+        modifier = (typeof modifier === 'function') ? modifier : function (location) { return location; };
+
+        var applyModifierAndTrackLocation = function (modifier, location) {
+            var modifiedLocation = modifier(location);
+
+            if (modifiedLocation !== undefined) {
+                track(modifiedLocation);
+            }
+            else if (getEnvironment() === 'development') {
+                warning(null, 'The modifier given to .connectToHistory did not return any object. Please make sure to return the modified location object in your modifier.');
+            }
+        }
+
+		unlistenFromHistory = history.listen(function (location) {
+            applyModifierAndTrackLocation(modifier, location);
 		});
 
         if (!opts.ignoreInitialVisit && history.location) {
-            track(history.location);
+            applyModifierAndTrackLocation(modifier, history.location);
         }
 
 		return history;

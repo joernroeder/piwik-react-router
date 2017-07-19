@@ -352,6 +352,105 @@ describe('piwik-react-router client tests', function () {
       ]);
     });
 
+    it ('should correctly forward the given location via the given modifier to the track method', () => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+      });
+
+      const unlistenFn = sinon.spy();
+      let listenStub = sinon.stub().returns(unlistenFn);
+      const modifierStub = sinon.stub().returnsArg(0);
+
+      const history = {
+        listen: listenStub
+      };
+
+      piwikReactRouter.connectToHistory(history, modifierStub);
+      listenStub.getCall(0).args[0]({
+        pathname: '/foo/bar.html',
+        search: '?foo=bar'
+      });
+      assert.isTrue(modifierStub.calledOnce);
+
+      assert.includeDeepMembers(window._paq, [
+        [ 'setCustomUrl', '/foo/bar.html?foo=bar' ],
+        [ 'trackPageView' ]
+      ]);
+    });
+
+    it('should correctly ignore the visit and throw a warning during development if the .connectToHistory modifier did not return an object.', () => {
+      let warningSpy = sinon.spy();
+      const piwikReactRouter = testUtils.requireNoCache('../', {
+        'warning': warningSpy
+      })({
+        url: 'foo.bar',
+        siteId: 1
+      })
+
+      const unlistenFn = sinon.spy();
+      let listenStub = sinon.stub().returns(unlistenFn);
+
+      const history = {
+        listen: listenStub,
+        location: {
+          pathname: '/foo/bar.html',
+          search: '?foo=bar'
+        }
+      };
+
+      const modifier = function (location) {
+          location.search = 'campain=ID';
+      };
+
+      piwikReactRouter.connectToHistory(history, modifier);
+
+      assert.isTrue(warningSpy.calledOnce);
+    });
+
+    describe ('should correctly ignore the visit and suppress a warning if the .connectToHistory modifier did not return an object.', () => {
+
+        let env;
+
+        before(() => {
+          env = process.env;
+          process.env = { NODE_ENV: 'PRODUCTION' };
+        });
+
+        after(() => {
+          process.env = env;
+        });
+
+      it ('inores the warning in production', function () {
+          let warningSpy = sinon.spy();
+          const piwikReactRouter = testUtils.requireNoCache('../', {
+            'warning': warningSpy
+          })({
+            url: 'foo.bar',
+            siteId: 1
+          })
+
+          const unlistenFn = sinon.spy();
+          let listenStub = sinon.stub().returns(unlistenFn);
+
+          const history = {
+            listen: listenStub,
+            location: {
+              pathname: '/foo/bar.html',
+              search: '?foo=bar'
+            }
+          };
+
+          const modifier = function (location) {
+              location.search = 'campain=ID';
+          };
+
+          piwikReactRouter.connectToHistory(history, modifier);
+
+          assert.isFalse(warningSpy.called);
+      });
+    });
+
     it ('should correctly track the initial visit if opts.ignoreInitialVisit is disabled', ()  => {
       const piwikReactRouter = testUtils.requireNoCache('../')({
         url: 'foo.bar',
