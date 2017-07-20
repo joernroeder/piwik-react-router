@@ -30,9 +30,9 @@ Simply create your instance with the same `url` and `siteId` as described in the
 _Starting with v2.0 react-router won't provide a default history. [Why?](https://github.com/rackt/react-router/blob/master/upgrade-guides/v2.0.0.md#no-default-history)_.
 
 ```jsx
-var PiwikReactRouter = require('piwik-react-router');
+const PiwikReactRouter = require('piwik-react-router');
 
-var piwik = PiwikReactRouter({
+const piwik = PiwikReactRouter({
 	url: 'your-piwik-installation.com',
 	siteId: 1
 });
@@ -119,8 +119,8 @@ Tracks the given error as a new [Piwik Event](http://piwik.org/docs/event-tracki
 
 Adds a listener to the passed in `history` to trigger `track(location)` whenever the history changes. The optional modifier function (added in version `0.9.0`) acts as a proxy to allow the modification of the given location before the `track(location)` function is called.
 
-```js
-var modifier = function (location) {
+```jsx
+const modifier = function (location) {
 	location.search = 'campain=ID';
 
 	return location;
