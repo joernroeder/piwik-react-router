@@ -26,11 +26,12 @@ var PiwikTracker = function(opts) {
 	opts.enableLinkTracking = ((opts.enableLinkTracking !== undefined) ? opts.enableLinkTracking : true);
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 	opts.ignoreInitialVisit = ((opts.ignoreInitialVisit !== undefined) ? opts.ignoreInitialVisit : false);
+	opts.alreadyInitialized = ((opts.alreadyInitialized !== undefined) ? opts.alreadyInitialized : false);
 	opts.injectScript = ((opts.injectScript !== undefined) ? opts.injectScript : true);
 	opts.clientTrackerName = ((opts.clientTrackerName !== undefined) ? opts.clientTrackerName : 'piwik.js');
 	opts.serverTrackerName = ((opts.serverTrackerName !== undefined) ? opts.serverTrackerName : 'piwik.php');
 
-  if (!opts.url || !opts.siteId) {
+  if ((!opts.url || !opts.siteId) && !opts.alreadyInitialized) {
 		// Only return warning if this is not in the test environment as it can break the Tests/CI.
 		if (getEnvironment() !== 'test') {
 			warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and siteId to it.');
@@ -148,14 +149,16 @@ var PiwikTracker = function(opts) {
 
 	// piwik initializer
 	(function() {
-    if (opts.url.indexOf('http://') !== -1 || opts.url.indexOf('https://') !== -1) {
-      var u = opts.url + '/';
-    } else {
-      var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
-    }
+		if (!opts.alreadyInitialized){
+	    if (opts.url.indexOf('http://') !== -1 || opts.url.indexOf('https://') !== -1) {
+	      var u = opts.url + '/';
+	    } else {
+	      var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
+	    }
 
-		push(['setSiteId', opts.siteId]);
-		push(['setTrackerUrl', u+opts.serverTrackerName]);
+			push(['setSiteId', opts.siteId]);
+			push(['setTrackerUrl', u+opts.serverTrackerName]);
+		}
 
 		if (opts.userId) {
 			push(['setUserId', opts.userId]);
@@ -165,7 +168,7 @@ var PiwikTracker = function(opts) {
 			push(['enableLinkTracking']);
 		}
 
-		if (opts.injectScript) {
+		if (!opts.alreadyInitialized && opts.injectScript) {
 			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+opts.clientTrackerName;
 			s.parentNode.insertBefore(g,s);
 		}
