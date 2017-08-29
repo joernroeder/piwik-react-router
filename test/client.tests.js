@@ -276,7 +276,22 @@ describe('piwik-react-router client tests', function () {
       assert.strictEqual(window.onerror, piwikReactRouter.trackError);
     });
 
+    it('should use a custom error handler if provided', () => {
+      window.addEventListener = undefined;
+      window.attachEvent = undefined;
 
+      const trackErrorHandler = sinon.spy();
+
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+        trackErrors: true,
+        trackErrorHandler,
+      });
+
+      assert.strictEqual(window.onerror, trackErrorHandler);
+      assert.strictEqual(piwikReactRouter.trackError, trackErrorHandler);
+    });
   });
 
   describe('history', () => {

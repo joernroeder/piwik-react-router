@@ -23,6 +23,7 @@ var PiwikTracker = function(opts) {
 
   opts = opts || {};
 	opts.trackErrors = ((opts.trackErrors !== undefined) ? opts.trackErrors : false);
+	opts.trackErrorHandler = ((opts.trackErrorHandler !== undefined) ? opts.trackErrorHandler : trackError);
 	opts.enableLinkTracking = ((opts.enableLinkTracking !== undefined) ? opts.enableLinkTracking : true);
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 	opts.ignoreInitialVisit = ((opts.ignoreInitialVisit !== undefined) ? opts.ignoreInitialVisit : false);
@@ -83,7 +84,7 @@ var PiwikTracker = function(opts) {
 	 *
 	 * @see http://davidwalsh.name/track-errors-google-analytics
 	 */
-	var trackError = function trackError (e, eventName) {
+	function trackError (e, eventName) {
 		eventName = eventName || 'JavaScript Error';
 
 		push([
@@ -136,13 +137,13 @@ var PiwikTracker = function(opts) {
 
 	if (opts.trackErrors) {
 		if (window.addEventListener) {
-			window.addEventListener('error', trackError, false);
+			window.addEventListener('error', opts.trackErrorHandler, false);
 		}
 		else if (window.attachEvent) {
-			window.attachEvent('onerror', trackError);
+			window.attachEvent('onerror', opts.trackErrorHandler);
 		}
 		else {
-			window.onerror = trackError;
+			window.onerror = opts.trackErrorHandler;
 		}
 	}
 
@@ -176,7 +177,7 @@ var PiwikTracker = function(opts) {
     _isShim: false,
 		track: track,
 		push: push,
-		trackError: trackError,
+		trackError: opts.trackErrorHandler,
 		connectToHistory: connectToHistory,
 		disconnectFromHistory: disconnectFromHistory
 	};
