@@ -276,7 +276,7 @@ describe('piwik-react-router client tests', function () {
       assert.strictEqual(window.onerror, piwikReactRouter.trackError);
     });
 
-    it('should use a custom error handler if provided', () => {
+    it('should use a custom error handler if provided', function() {
       window.addEventListener = undefined;
       window.attachEvent = undefined;
 
@@ -286,7 +286,7 @@ describe('piwik-react-router client tests', function () {
         url: 'foo.bar',
         siteId: 1,
         trackErrors: true,
-        trackErrorHandler,
+        trackErrorHandler: trackErrorHandler
       });
 
       assert.strictEqual(window.onerror, trackErrorHandler);
