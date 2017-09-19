@@ -76,7 +76,7 @@ By enabling this option occurring javascript errors will be tracked as a `JavaSc
 see [http://davidwalsh.name/track-errors-google-analytics](http://davidwalsh.name/track-errors-google-analytics) for further details
 
 
-## trackErrorHandler: [default error handler]
+### trackErrorHandler: [default error handler]
 
 Set a custom error handler for javascript errors, allowing custom formatting of events published when an error occurs.
 
