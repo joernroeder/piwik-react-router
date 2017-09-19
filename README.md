@@ -76,6 +76,12 @@ By enabling this option occurring javascript errors will be tracked as a `JavaSc
 see [http://davidwalsh.name/track-errors-google-analytics](http://davidwalsh.name/track-errors-google-analytics) for further details
 
 
+## trackErrorHandler: [default error handler]
+
+Set a custom error handler for javascript errors, allowing custom formatting of events published when an error occurs.
+
+see [Tracking Events](http://piwik.org/docs/event-tracking/#tracking-events) for further details
+
 ### ignoreInitialVisit: `false`
 
 By enabling `ignoreInitialVisit` it connects to the history without tracking the initial visit.
@@ -113,6 +119,8 @@ Pushes the specified args to the Piwik tracker the same way as you're using the 
 ### trackError (error, [eventName])
 
 Tracks the given error as a new [Piwik Event](http://piwik.org/docs/event-tracking/#tracking-events) for the given event name. If you don't specify any name here it will fallback to `JavaScript Error`.
+
+The handler is overriden if the `trackErrorHandler` option is set.
 
 
 ### connectToHistory(history, [modifier])
