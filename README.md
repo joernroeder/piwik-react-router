@@ -101,6 +101,10 @@ The name of the `piwik.js` static resource on the Piwik server. Set this option 
 
 The name of the `piwik.php` script on the Piwik server. Set this option if the Piwik instance uses a different name.
 
+### piwikScriptDataAttribute `piwik-react-router`
+
+Starting with version `v0.XXX.0` multiple instances of `piwikreactRouter` can live on the same page and share a tracker script `script[url= opts.clientTrackerName]`. The `siteId` used to instantiate the script is stored in its `data-${piwikScriptDataAttribute}` attribute.
+
 
 ## API
 
