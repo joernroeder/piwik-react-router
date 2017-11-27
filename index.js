@@ -8,6 +8,7 @@ var apiShim = {
   _isShim: true,
 	track: function () {},
 	push: function (args) {},
+	setUserId: function (userId) {},
 	trackError: function (e) {},
 	connectToHistory: function (history, modifier) { return history; },
 	disconnectFromHistory: function () {}
@@ -77,6 +78,16 @@ var PiwikTracker = function(opts) {
 	 */
 	var push = function push (args) {
 		window._paq.push(args);
+	};
+
+  /**
+	 * Sets a user ID to the piwik tracker.
+	 * This method can be used after PiwikReactRouter is instantiated, for example after a user has logged in
+	 *
+	 * @see https://developer.piwik.org/guides/tracking-javascript-guide#user-id
+	 */
+	var setUserId = function setUserId (userId) {
+		window._paq.push(['setUserId', userId])
 	};
 
 	/**
@@ -159,7 +170,7 @@ var PiwikTracker = function(opts) {
 		push(['setTrackerUrl', u+opts.serverTrackerName]);
 
 		if (opts.userId) {
-			push(['setUserId', opts.userId]);
+			setUserId(opts.userId);
 		}
 
 		if (opts.enableLinkTracking) {
@@ -177,6 +188,7 @@ var PiwikTracker = function(opts) {
     _isShim: false,
 		track: track,
 		push: push,
+		setUserId, setUserId,
 		trackError: opts.trackErrorHandler,
 		connectToHistory: connectToHistory,
 		disconnectFromHistory: disconnectFromHistory
