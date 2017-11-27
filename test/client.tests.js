@@ -547,6 +547,42 @@ describe('piwik-react-router client tests', function () {
       assert.isTrue(piwikScripts.length === 0);
     });
 
+    it ('should warn about a missing siteId if opts.injectScript is disabled and the external piwik script is not initialized', () => {
+      let warningSpy = sinon.spy();
+      const piwikReactRouter = testUtils.requireNoCache('../', {
+        'warning': warningSpy
+      })({
+        url: 'foo.bar',
+        injectScript: false
+      });
+
+      assert.isTrue(warningSpy.called);
+    });
+
+    it ('should not warn about a missing siteId if opts.injectScript is disabled and the external piwik script is initialized', () => {
+      let warningSpy = sinon.spy();
+
+      // instantiating piwik
+      (function() {
+        var u='http://foo.bar/';
+        var _paq = _paq || [];
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+      })();
+
+      const piwikReactRouter = testUtils.requireNoCache('../', {
+        'warning': warningSpy
+      })({
+        url: 'foo.bar',
+        injectScript: false
+      });
+
+      assert.isFalse(warningSpy.called);
+
+    });
+
     it ('should not inject piwik.js twice if multiple piwicReactRouter intances are created', () => {
       const piwikReactRouter = testUtils.requireNoCache('../')({
         url: 'foo.bar',

@@ -21,12 +21,50 @@ var PiwikTracker = function(opts) {
     return process && process.env && process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
   };
 
+  var getBaseUrl = function () {
+    var u = ''
+    var url = opts.url || window.location.hostname;
+
+    if (url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1) {
+      u = url + '/';
+    }
+    else {
+      u = (('https:' == document.location.protocol) ? 'https://' + url + '/' : 'http://' + url + '/');
+    }
+
+    return u;
+  }
+
   var piwikIsAlreadyInitialized = function () {
     var scripts = document.getElementsByTagName('script');
+    var scriptUrl = getBaseUrl() + opts.clientTrackerName;
+
+    var found = false;
 
     for (var i = 0, n = scripts.length; i < n; i++) {
-      if (scripts[i].getAttribute('data-' + opts.piwikScriptDataAttribute) !== null) {
-        return true;
+      if (scripts[i].getAttribute('src') === scriptUrl) {
+         found = true;
+         break;
+      }
+    }
+
+    if (!found) {
+      return false;
+    }
+
+    var hasSiteId = false;
+    var hasTrackerUrl = false;
+    for (var j = 0, l = window._paq.length; j < l; j++) {
+      if (~window._paq[j].indexOf('setSiteId')) {
+        hasSiteId = true
+      }
+
+      if (~window._paq[j].indexOf('setTrackerUrl')) {
+        hasTrackerUrl = true
+      }
+
+      if (hasTrackerUrl && hasSiteId) {
+        return true
       }
     }
 
@@ -44,7 +82,15 @@ var PiwikTracker = function(opts) {
   opts.serverTrackerName = ((opts.serverTrackerName !== undefined) ? opts.serverTrackerName : 'piwik.php');
   opts.piwikScriptDataAttribute = ((opts.piwikScriptDataAttribute !== undefined) ? opts.piwikScriptDataAttribute : 'piwik-react-router');
 
-  if ((!opts.url || !opts.siteId) && !piwikIsAlreadyInitialized()) {
+  window._paq = window['_paq'] || [];
+
+
+  var alreadyInitialized = piwikIsAlreadyInitialized();
+  var piwikWithoutUrlOrSiteId = (!opts.url || !opts.siteId) && !alreadyInitialized;
+  var piwikWithoutInjectScript = !opts.injectScript && !alreadyInitialized;
+
+
+  if (piwikWithoutUrlOrSiteId || piwikWithoutInjectScript) {
     // Only return warning if this is not in the test environment as it can break the Tests/CI.
     if (getEnvironment() !== 'test') {
       warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and siteId to it.');
@@ -52,8 +98,6 @@ var PiwikTracker = function(opts) {
 
     return apiShim;
   }
-
-  window._paq = window['_paq'] || [];
 
   /**
    * Adds a page view for the given location
@@ -165,11 +209,7 @@ var PiwikTracker = function(opts) {
     var alreadyInitialized = piwikIsAlreadyInitialized();
 
     if (!alreadyInitialized) {
-      if (opts.url.indexOf('http://') !== -1 || opts.url.indexOf('https://') !== -1) {
-        var u = opts.url + '/';
-      } else {
-        var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
-      }
+      var u = getBaseUrl()
 
       push(['setSiteId', opts.siteId]);
       push(['setTrackerUrl', u + opts.serverTrackerName]);
