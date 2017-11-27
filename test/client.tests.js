@@ -565,9 +565,9 @@ describe('piwik-react-router client tests', function () {
       // instantiating piwik
       (function() {
         var u='http://foo.bar/';
-        var _paq = _paq || [];
-        _paq.push(['setTrackerUrl', u+'piwik.php']);
-        _paq.push(['setSiteId', 1]);
+        window._paq = window._paq || [];
+        window._paq.push(['setTrackerUrl', u+'piwik.php']);
+        window._paq.push(['setSiteId', 1]);
         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
         g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
       })();
