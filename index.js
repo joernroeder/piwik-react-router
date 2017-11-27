@@ -170,7 +170,7 @@ var PiwikTracker = function(opts) {
 		push(['setTrackerUrl', u+opts.serverTrackerName]);
 
 		if (opts.userId) {
-			push(['setUserId', opts.userId]);
+			setUserId(opts.userId);
 		}
 
 		if (opts.enableLinkTracking) {
