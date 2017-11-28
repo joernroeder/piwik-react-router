@@ -578,6 +578,29 @@ describe('piwik-react-router client tests', function () {
       assert.isTrue(warningSpy.called);
     });
 
+    it ('should warn about a missing siteId if opts.injectScript is disabled and the external piwik script is not properly initialized', () => {
+      let warningSpy = sinon.spy();
+
+      // instantiating piwik
+      (function() {
+        var u='http://foo.bar/';
+        window._paq = window._paq || [];
+        window._paq.push(['setTrackerUrl', u+'piwik.php']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+      })();
+
+      const piwikReactRouter = testUtils.requireNoCache('../', {
+        'warning': warningSpy
+      })({
+        url: 'foo.bar',
+        injectScript: false
+      });
+
+      assert.isTrue(warningSpy.called);
+
+    });
+
     it ('should not warn about a missing siteId if opts.injectScript is disabled and the external piwik script is initialized', () => {
       let warningSpy = sinon.spy();
 
