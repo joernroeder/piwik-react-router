@@ -13,6 +13,7 @@ const requireNoCache = function (filePath, opts) {
 const API_METHOD_NAMES = [
   'track',
   'push',
+	'setUserId',
   'trackError',
   'connectToHistory',
   'disconnectFromHistory'

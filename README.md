@@ -120,6 +120,11 @@ Adds a page view from a history [Location](https://github.com/rackt/history/blob
 Pushes the specified args to the Piwik tracker the same way as you're using the `_paq.push(args);` directly. You can use this method as the low-level api to call methods from the [Piwik API](http://developer.piwik.org/api-reference/tracking-javascript#list-of-all-methods-available-in-the-tracking-api), [track events](http://piwik.org/docs/event-tracking/#tracking-events) or call [custom functions](http://developer.piwik.org/guides/tracking-javascript-guide).
 
 
+### setUserId (userId)
+
+Sets the specified user id to the Piwik tracker after `PiwikReactRouter` has been initialized. It wraps around the `'setUserId'` method of Piwik [User ID](https://developer.piwik.org/guides/tracking-javascript-guide#user-id)
+
+
 ### trackError (error, [eventName])
 
 Tracks the given error as a new [Piwik Event](http://piwik.org/docs/event-tracking/#tracking-events) for the given event name. If you don't specify any name here it will fallback to `JavaScript Error`.

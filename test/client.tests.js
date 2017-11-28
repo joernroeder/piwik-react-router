@@ -55,7 +55,7 @@ describe('piwik-react-router client tests', function () {
     ]);
   });
 
-  it ('should correctly push the userId', () => {
+  it ('should correctly push the userId on instantiation', () => {
     const piwikReactRouter = testUtils.requireNoCache('../')({
       url: 'foo.bar',
       siteId: 1,
@@ -207,6 +207,25 @@ describe('piwik-react-router client tests', function () {
       assert.isFalse(warningSpy.called);
     });
 
+  });
+
+  describe('setUserId', () => {
+    it('should add user id to _paq', () => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1
+      });
+
+      const userId = 'user@email.com';
+      piwikReactRouter.setUserId(userId);
+
+      assert.includeDeepMembers(window._paq, [
+        [
+          'setUserId',
+          'user@email.com'
+        ]
+      ]);
+    });
   });
 
   //it ('should correctly warn')
