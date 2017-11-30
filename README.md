@@ -51,6 +51,7 @@ If you're using react-router prior to v1.0 please head over to the [react-router
 For the url-option you can also include `http://` or `https://` in the beginning of the url, if you piwik installation is on ssl, but your react-site is not, or visa versa.
 
 
+
 ## Options
 
 ### enableLinkTracking: `true`
@@ -91,6 +92,11 @@ By enabling `ignoreInitialVisit` it connects to the history without tracking the
 
 By disabling `injectScript` the `piwik.js` script will not be injected automatically to allow a separate loading.
 
+Starting with version `0.12.0` the usually required options `siteId` and `url` are now optional if a running instance of the piwik tracking script is detected by validating the following cases:
+
+- A `<script>` src matches the url defined via `opts.url` and `opts.clientTrackerName`
+- `siteId` and `setTrackerUrl` calls are already present in `window._paq`
+
 
 ### clientTrackerName: `'piwik.js'`
 
@@ -103,7 +109,7 @@ The name of the `piwik.php` script on the Piwik server. Set this option if the P
 
 ### piwikScriptDataAttribute `piwik-react-router`
 
-Starting with version `v0.XXX.0` multiple instances of `piwikreactRouter` can live on the same page and share a tracker script `script[url= opts.clientTrackerName]`. The `siteId` used to instantiate the script is stored in its `data-${piwikScriptDataAttribute}` attribute.
+Starting with version `v0.11.0` multiple instances of `piwikreactRouter` can live on the same page and share a tracker script `script[url= opts.clientTrackerName]`. The `siteId` used to instantiate the script is stored in its `data-${piwikScriptDataAttribute}` attribute.
 
 
 ## API
