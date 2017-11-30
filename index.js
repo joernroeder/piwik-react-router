@@ -5,7 +5,7 @@ var urljoin = require('url-join');
 
 // api shim. used for serverside rendering and misconfigured tracker instances
 var apiShim = {
-  _isShim: true,
+	_isShim: true,
 	track: function () {},
 	push: function (args) {},
 	setUserId: function (userId) {},
@@ -18,11 +18,61 @@ var previousPath = null;
 var unlistenFromHistory = null;
 
 var PiwikTracker = function(opts) {
-  var getEnvironment = function () {
-    return process && process.env && process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
-  };
+	var getEnvironment = function () {
+		return process && process.env && process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
+	};
 
-  opts = opts || {};
+	var getBaseUrl = function () {
+		var u = ''
+		var url = opts.url || window.location.hostname;
+
+		if (url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1) {
+			u = url + '/';
+		}
+		else {
+			u = (('https:' == document.location.protocol) ? 'https://' + url + '/' : 'http://' + url + '/');
+		}
+
+		return u;
+	}
+
+	var piwikIsAlreadyInitialized = function () {
+		var scripts = document.getElementsByTagName('script');
+		var scriptUrl = getBaseUrl() + opts.clientTrackerName;
+
+		var found = false;
+
+		for (var i = 0, n = scripts.length; i < n; i++) {
+			if (scripts[i].getAttribute('src') === scriptUrl) {
+				 found = true;
+				 break;
+			}
+		}
+
+		if (!found) {
+			return false;
+		}
+
+		var hasSiteId = false;
+		var hasTrackerUrl = false;
+		for (var j = 0, l = window._paq.length; j < l; j++) {
+			if (~window._paq[j].indexOf('setSiteId')) {
+				hasSiteId = true
+			}
+
+			if (~window._paq[j].indexOf('setTrackerUrl')) {
+				hasTrackerUrl = true
+			}
+
+			if (hasTrackerUrl && hasSiteId) {
+				return true
+			}
+		}
+
+		return false;
+	};
+
+	opts = opts || {};
 	opts.trackErrors = ((opts.trackErrors !== undefined) ? opts.trackErrors : false);
 	opts.trackErrorHandler = ((opts.trackErrorHandler !== undefined) ? opts.trackErrorHandler : trackError);
 	opts.enableLinkTracking = ((opts.enableLinkTracking !== undefined) ? opts.enableLinkTracking : true);
@@ -31,8 +81,17 @@ var PiwikTracker = function(opts) {
 	opts.injectScript = ((opts.injectScript !== undefined) ? opts.injectScript : true);
 	opts.clientTrackerName = ((opts.clientTrackerName !== undefined) ? opts.clientTrackerName : 'piwik.js');
 	opts.serverTrackerName = ((opts.serverTrackerName !== undefined) ? opts.serverTrackerName : 'piwik.php');
+	opts.piwikScriptDataAttribute = ((opts.piwikScriptDataAttribute !== undefined) ? opts.piwikScriptDataAttribute : 'piwik-react-router');
 
-  if (!opts.url || !opts.siteId) {
+	window._paq = window['_paq'] || [];
+
+
+	var alreadyInitialized = piwikIsAlreadyInitialized();
+	var piwikWithoutUrlOrSiteId = (!opts.url || !opts.siteId) && !alreadyInitialized;
+	var piwikWithoutInjectScript = !opts.injectScript && !alreadyInitialized;
+
+
+	if (piwikWithoutUrlOrSiteId || piwikWithoutInjectScript) {
 		// Only return warning if this is not in the test environment as it can break the Tests/CI.
 		if (getEnvironment() !== 'test') {
 			warning(null, 'PiwikTracker cannot be initialized! You haven\'t passed a url and siteId to it.');
@@ -41,8 +100,6 @@ var PiwikTracker = function(opts) {
 		return apiShim;
 	}
 
-	window._paq = window['_paq'] || [];
-
 	/**
 	 * Adds a page view for the given location
 	 */
@@ -50,11 +107,11 @@ var PiwikTracker = function(opts) {
 		var currentPath;
 
 		if (loc.path) {
-		  currentPath = loc.path;
+			currentPath = loc.path;
 		} else if (loc.basename) {
-		  currentPath = urljoin(loc.basename, loc.pathname, loc.search);
+			currentPath = urljoin(loc.basename, loc.pathname, loc.search);
 		} else {
-		  currentPath = urljoin(loc.pathname, loc.search);
+			currentPath = urljoin(loc.pathname, loc.search);
 		}
 
 		if (previousPath === currentPath) {
@@ -70,7 +127,7 @@ var PiwikTracker = function(opts) {
 		previousPath = currentPath;
 	};
 
-	/**
+	/*
 	 * Pushes the specified args to the piwik tracker.
 	 * You can use this method as the low-level api to call methods from the piwik API or call custom functions
 	 *
@@ -80,7 +137,7 @@ var PiwikTracker = function(opts) {
 		window._paq.push(args);
 	};
 
-  /**
+	/**
 	 * Sets a user ID to the piwik tracker.
 	 * This method can be used after PiwikReactRouter is instantiated, for example after a user has logged in
 	 *
@@ -110,26 +167,26 @@ var PiwikTracker = function(opts) {
 	 * Connects to the given history
 	 */
 	var connectToHistory = function (history, modifier) {
-        modifier = (typeof modifier === 'function') ? modifier : function (location) { return location; };
+				modifier = (typeof modifier === 'function') ? modifier : function (location) { return location; };
 
-        var applyModifierAndTrackLocation = function (modifier, location) {
-            var modifiedLocation = modifier(location);
+				var applyModifierAndTrackLocation = function (modifier, location) {
+						var modifiedLocation = modifier(location);
 
-            if (modifiedLocation !== undefined) {
-                track(modifiedLocation);
-            }
-            else if (getEnvironment() === 'development') {
-                warning(null, 'The modifier given to .connectToHistory did not return any object. Please make sure to return the modified location object in your modifier.');
-            }
-        }
+						if (modifiedLocation !== undefined) {
+								track(modifiedLocation);
+						}
+						else if (getEnvironment() === 'development') {
+								warning(null, 'The modifier given to .connectToHistory did not return any object. Please make sure to return the modified location object in your modifier.');
+						}
+				}
 
 		unlistenFromHistory = history.listen(function (location) {
-            applyModifierAndTrackLocation(modifier, location);
+						applyModifierAndTrackLocation(modifier, location);
 		});
 
-        if (!opts.ignoreInitialVisit && history.location) {
-            applyModifierAndTrackLocation(modifier, history.location);
-        }
+				if (!opts.ignoreInitialVisit && history.location) {
+						applyModifierAndTrackLocation(modifier, history.location);
+				}
 
 		return history;
 	};
@@ -140,10 +197,10 @@ var PiwikTracker = function(opts) {
 	var disconnectFromHistory = function () {
 		if (unlistenFromHistory) {
 			unlistenFromHistory();
-      return true;
+			return true;
 		}
 
-    return false;
+		return false;
 	};
 
 	if (opts.trackErrors) {
@@ -160,14 +217,18 @@ var PiwikTracker = function(opts) {
 
 	// piwik initializer
 	(function() {
-    if (opts.url.indexOf('http://') !== -1 || opts.url.indexOf('https://') !== -1) {
-      var u = opts.url + '/';
-    } else {
-      var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
-    }
+		var alreadyInitialized = piwikIsAlreadyInitialized();
 
-		push(['setSiteId', opts.siteId]);
-		push(['setTrackerUrl', u+opts.serverTrackerName]);
+		if (!alreadyInitialized) {
+			if (opts.url.indexOf('http://') !== -1 || opts.url.indexOf('https://') !== -1) {
+				var u = opts.url + '/';
+			} else {
+				var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
+			}
+
+			push(['setSiteId', opts.siteId]);
+			push(['setTrackerUrl', u + opts.serverTrackerName]);
+		}
 
 		if (opts.userId) {
 			setUserId(opts.userId);
@@ -177,18 +238,25 @@ var PiwikTracker = function(opts) {
 			push(['enableLinkTracking']);
 		}
 
-		if (opts.injectScript) {
-			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+opts.clientTrackerName;
+		if (opts.injectScript && !alreadyInitialized) {
+			var d=document;
+			var g=d.createElement('script');
+			var s=d.getElementsByTagName('script')[0];
+			g.type='text/javascript';
+			g.defer=true;
+			g.async=true;
+			g.src=u+opts.clientTrackerName;
 			s.parentNode.insertBefore(g,s);
+			g.setAttribute('data-' + opts.piwikScriptDataAttribute, opts.siteId);
 		}
 	})();
 
 	// return api
 	return {
-    _isShim: false,
+		_isShim: false,
 		track: track,
 		push: push,
-		setUserId, setUserId,
+		setUserId: setUserId,
 		trackError: opts.trackErrorHandler,
 		connectToHistory: connectToHistory,
 		disconnectFromHistory: disconnectFromHistory
