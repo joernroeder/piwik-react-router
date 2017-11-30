@@ -220,11 +220,7 @@ var PiwikTracker = function(opts) {
 		var alreadyInitialized = piwikIsAlreadyInitialized();
 
 		if (!alreadyInitialized) {
-			if (opts.url.indexOf('http://') !== -1 || opts.url.indexOf('https://') !== -1) {
-				var u = opts.url + '/';
-			} else {
-				var u = (('https:' == document.location.protocol) ? 'https://' + opts.url + '/' : 'http://' + opts.url + '/');
-			}
+			var u = getBaseUrl();
 
 			push(['setSiteId', opts.siteId]);
 			push(['setTrackerUrl', u + opts.serverTrackerName]);
