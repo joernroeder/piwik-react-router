@@ -256,7 +256,7 @@ var PiwikTracker = function(opts) {
 		_isShim: false,
 		track: track,
 		push: push,
-		setUserId, setUserId,
+		setUserId: setUserId,
 		trackError: opts.trackErrorHandler,
 		connectToHistory: connectToHistory,
 		disconnectFromHistory: disconnectFromHistory
