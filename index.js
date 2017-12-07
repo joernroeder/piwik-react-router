@@ -55,6 +55,15 @@ var PiwikTracker = function(opts) {
 
 		var hasSiteId = false;
 		var hasTrackerUrl = false;
+
+		if (window._paq.length === undefined) {
+			// piwik seems to have replaced the array by it's TrackerProxy
+			// @see https://github.com/piwik/piwik/blob/3.x-dev/js/piwik.js#L7050
+			// @see https://github.com/piwik/piwik/blob/3.x-dev/js/piwik.js#L7115
+			// we should be good to go.
+			return true;
+		}
+
 		for (var j = 0, l = window._paq.length; j < l; j++) {
 			if (~window._paq[j].indexOf('setSiteId')) {
 				hasSiteId = true
