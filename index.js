@@ -57,10 +57,9 @@ var PiwikTracker = function(opts) {
 		var hasTrackerUrl = false;
 
 		if (window._paq.length === undefined) {
-			// piwik seems to have replaced the array by it's TrackerProxy
+			// piwik seems to have replaced the array by the TrackerProxy
 			// @see https://github.com/piwik/piwik/blob/3.x-dev/js/piwik.js#L7050
 			// @see https://github.com/piwik/piwik/blob/3.x-dev/js/piwik.js#L7115
-			// we should be good to go.
 			return true;
 		}
 
