@@ -682,38 +682,6 @@ describe('piwik-react-router client tests', function () {
       const piwikReactRouter2 = testUtils.requireNoCache('../')();
     });
 
-    it ('it should correctly store the string representation of siteId in the data-piwik-react-router attribute of the script', () => {
-      const piwikReactRouter = testUtils.requireNoCache('../')({
-        url: 'foo.bar',
-        siteId: 100
-      });
-
-      const piwikReactRouter2 = testUtils.requireNoCache('../')();
-
-      var allScripts = [].slice.call(window.document.scripts);
-      var piwikScripts = allScripts.filter((script) => {
-        return script.src.indexOf('piwik.js') !== -1;
-      });
-
-      assert.isTrue(piwikScripts[0].getAttribute('data-piwik-react-router') === '100');
-    });
-
-    it ('should correctly use the given piwikScriptDataAttribute option.', () => {
-      const piwikReactRouter = testUtils.requireNoCache('../')({
-        url: 'foo.bar',
-        siteId: 100,
-        piwikScriptDataAttribute: 'foobar'
-      });
-
-      const piwikReactRouter2 = testUtils.requireNoCache('../')();
-
-      var allScripts = [].slice.call(window.document.scripts);
-      var piwikScripts = allScripts.filter((script) => {
-        return script.src.indexOf('piwik.js') !== -1;
-      });
-
-      assert.isTrue(piwikScripts[0].getAttribute('data-foobar') === '100');
-    })
   });
 
   it ('should correctly handle basename', () => {

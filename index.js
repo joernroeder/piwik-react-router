@@ -24,7 +24,7 @@ var PiwikTracker = function(opts) {
 
 	var getBaseUrl = function () {
 		var u = ''
-		var url = opts.url || window.location.hostname;
+		var url = opts.url;
 
 		if (url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1) {
 			u = url + '/';
@@ -37,19 +37,7 @@ var PiwikTracker = function(opts) {
 	}
 
 	var piwikIsAlreadyInitialized = function () {
-		var scripts = document.getElementsByTagName('script');
-		var scriptUrl = getBaseUrl() + opts.clientTrackerName;
-
-		var found = false;
-
-		for (var i = 0, n = scripts.length; i < n; i++) {
-			if (scripts[i].getAttribute('src') === scriptUrl) {
-				 found = true;
-				 break;
-			}
-		}
-
-		if (!found) {
+		if (typeof window._paq === 'undefined' || typeof window._paq.push !== 'function') {
 			return false;
 		}
 
@@ -89,12 +77,11 @@ var PiwikTracker = function(opts) {
 	opts.injectScript = ((opts.injectScript !== undefined) ? opts.injectScript : true);
 	opts.clientTrackerName = ((opts.clientTrackerName !== undefined) ? opts.clientTrackerName : 'piwik.js');
 	opts.serverTrackerName = ((opts.serverTrackerName !== undefined) ? opts.serverTrackerName : 'piwik.php');
-	opts.piwikScriptDataAttribute = ((opts.piwikScriptDataAttribute !== undefined) ? opts.piwikScriptDataAttribute : 'piwik-react-router');
+
+	var alreadyInitialized = piwikIsAlreadyInitialized();
 
 	window._paq = window['_paq'] || [];
 
-
-	var alreadyInitialized = piwikIsAlreadyInitialized();
 	var piwikWithoutUrlOrSiteId = (!opts.url || !opts.siteId) && !alreadyInitialized;
 	var piwikWithoutInjectScript = !opts.injectScript && !alreadyInitialized;
 
@@ -250,8 +237,7 @@ var PiwikTracker = function(opts) {
 			g.defer=true;
 			g.async=true;
 			g.src=u+opts.clientTrackerName;
-			s.parentNode.insertBefore(g,s);
-			g.setAttribute('data-' + opts.piwikScriptDataAttribute, opts.siteId);
+			s.parentNode.insertBefore(g, s);
 		}
 	})();
 
