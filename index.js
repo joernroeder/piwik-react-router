@@ -222,7 +222,7 @@ var PiwikTracker = function(opts) {
 			push(['setSiteId', opts.siteId]);
 			push(['setTrackerUrl', u + opts.serverTrackerName]);
 
-			if (opts.optionalTrackers && opts.optionalTrackersWebsiteId && !alreadyInitialized) {
+			if (opts.optionalTrackers.length && opts.optionalTrackersWebsiteId.length ) {
 				for (var i in opts.optionalTrackers) {
 					push(['addTracker', opts.optionalTrackers[i], opts.optionalTrackersWebsiteId[i]]);
 				}
