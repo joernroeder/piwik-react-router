@@ -233,11 +233,18 @@ var PiwikTracker = function(opts) {
 			var d=document;
 			var g=d.createElement('script');
 			var s=d.getElementsByTagName('script')[0];
+
 			g.type='text/javascript';
 			g.defer=true;
 			g.async=true;
 			g.src=u+opts.clientTrackerName;
-			s.parentNode.insertBefore(g, s);
+			
+			if (s) {
+				s.parentNode.insertBefore(g,s)
+			} else {
+				var body=d.getElementsByTagName('body')[0];
+				body.appendChild(g);
+			}
 		}
 	})();
 
