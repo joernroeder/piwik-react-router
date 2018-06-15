@@ -562,6 +562,24 @@ describe('piwik-react-router client tests', function () {
       assert.isTrue(piwikScripts.length === 0);
     });
 
+    it ('should inject piwik.js if another script object is already present', () => {
+      let emptyScriptTag = document.createElement('script');
+      document.getElementsByTagName('head')[0].appendChild(emptyScriptTag);
+
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+        injectScript: true
+      });
+
+      var allScripts = [].slice.call(window.document.scripts);
+      var piwikScripts = allScripts.filter((script) => {
+        return script.src.indexOf('piwik.js') !== -1;
+      });
+
+      assert.isTrue(piwikScripts.length >= 1);
+    });
+
     it ('should warn about a missing siteId if opts.injectScript is disabled and the external piwik script is not initialized', () => {
       let warningSpy = sinon.spy();
       const piwikReactRouter = testUtils.requireNoCache('../', {
