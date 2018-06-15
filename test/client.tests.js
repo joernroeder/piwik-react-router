@@ -7,11 +7,7 @@ describe('piwik-react-router client tests', function () {
   let jsdomBody;
 
   beforeEach(() => {
-    // piwiks tracking client doesn't properly adds the script tag to jsdom or the other way around.
-    // As i won't modify the piwik loading script the easiest was to provide this hacky script tag.
-    // Dirty – i know ;)
-    jsdomBody = '<script></script>';
-
+    jsdomBody = '';
     this.jsdom = require('jsdom-global')(jsdomBody, {
       url: 'http://foo.bar'
     });
@@ -566,6 +562,24 @@ describe('piwik-react-router client tests', function () {
       assert.isTrue(piwikScripts.length === 0);
     });
 
+    it ('should inject piwik.js if another script object is already present', () => {
+      let emptyScriptTag = document.createElement('script');
+      document.getElementsByTagName('head')[0].appendChild(emptyScriptTag);
+
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+        injectScript: true
+      });
+
+      var allScripts = [].slice.call(window.document.scripts);
+      var piwikScripts = allScripts.filter((script) => {
+        return script.src.indexOf('piwik.js') !== -1;
+      });
+
+      assert.isTrue(piwikScripts.length >= 1);
+    });
+
     it ('should warn about a missing siteId if opts.injectScript is disabled and the external piwik script is not initialized', () => {
       let warningSpy = sinon.spy();
       const piwikReactRouter = testUtils.requireNoCache('../', {
@@ -580,6 +594,9 @@ describe('piwik-react-router client tests', function () {
 
     it ('should warn about a missing siteId if opts.injectScript is disabled and the external piwik script is not properly initialized', () => {
       let warningSpy = sinon.spy();
+      // add script tag for piwik initialization to find
+      let emptyScriptTag = document.createElement('script');
+      document.getElementsByTagName('body')[0].appendChild(emptyScriptTag);
 
       // instantiating piwik
       (function() {
@@ -603,6 +620,9 @@ describe('piwik-react-router client tests', function () {
 
     it ('should not warn about a missing siteId if opts.injectScript is disabled and the external piwik script is initialized', () => {
       let warningSpy = sinon.spy();
+      // add script tag for piwik initialization to find
+      let emptyScriptTag = document.createElement('script');
+      document.getElementsByTagName('body')[0].appendChild(emptyScriptTag);
 
       // instantiating piwik
       (function() {
@@ -627,6 +647,9 @@ describe('piwik-react-router client tests', function () {
     it ('should not warn about a missing siteId if opts.injectScript is disabled and the external piwik script has replaced _paq with the TrackerProxy', () => {
       let warningSpy = sinon.spy();
       let trackerProxySpy = sinon.spy();
+      // add script tag for piwik initialization to find
+      let emptyScriptTag = document.createElement('script');
+      document.getElementsByTagName('body')[0].appendChild(emptyScriptTag);
 
       // instantiating piwik
       (function() {
