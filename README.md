@@ -107,6 +107,21 @@ The name of the `piwik.js` static resource on the Piwik server. Set this option 
 
 The name of the `piwik.php` script on the Piwik server. Set this option if the Piwik instance uses a different name.
 
+### optionalTrackers: []
+
+Set a comma delimited list of Matomo servers urls for addTracker.  
+
+- The list of `url`s must match the order of urls in `optionalTrackersWebsiteId`.
+- e.g. [https://asdf.bar/piwik.php, https://qwerty.bar/piwik.php]
+
+By using this together with `optionalTrackersWebsiteId` you can track your analytics data into more than just one Matomo server or into multiple websites on the same Matomo server. See [Multiple Matomo trackers](https://developer.matomo.org/guides/tracking-javascript-guide#multiple-piwik-trackers)
+
+### optionalTrackersWebsiteId: []
+
+Set a comma delimited list of Matomo `siteId` for addTracker. Used together with `optionalTrackers`. 
+
+- The list of `siteId`s must match the order of urls in `optionalTrackers`.
+- e.g. [1, 2]
 
 ## API
 

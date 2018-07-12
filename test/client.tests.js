@@ -55,6 +55,57 @@ describe('piwik-react-router client tests', function () {
     ]);
   });
 
+  it ('should correctly push the addTracker to the _paq array on instantiation if optionalTrackers and optionalTrackersWebsiteId are given', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'foo.bar',
+      siteId: 1,
+      enableLinkTracking: true,
+      optionalTrackers: ['http://bar.bar/piwik.php'],
+      optionalTrackersWebsiteId: [2]
+    });
+
+    assert.sameDeepMembers(window._paq, [
+      [ 'setSiteId', 1 ],
+      [ 'setTrackerUrl', 'http://foo.bar/piwik.php' ],
+      [ 'enableLinkTracking' ],
+      [ 'addTracker', 'http://bar.bar/piwik.php', 2]
+    ]);
+  });
+
+  it ('should correctly push multiple addTrackers to the _paq array on instantiation if optionalTrackers and optionalTrackersWebsiteId are given with multiple values', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'foo.bar',
+      siteId: 1,
+      enableLinkTracking: true,
+      optionalTrackers: ['http://bar.bar/piwik.php', 'http://qwerty.bar/piwik.php'],
+      optionalTrackersWebsiteId: [1, 2]
+    });
+
+    assert.sameDeepMembers(window._paq, [
+      [ 'setSiteId', 1 ],
+      [ 'setTrackerUrl', 'http://foo.bar/piwik.php' ],
+      [ 'enableLinkTracking' ],
+      [ 'addTracker', 'http://bar.bar/piwik.php', 1],
+      [ 'addTracker', 'http://qwerty.bar/piwik.php', 2]
+    ]);
+  });
+
+  it ('should not push addTracker to the _paq array on instantiation if optionalTrackers and optionalTrackersWebsiteId are not given', () => {
+    const piwikReactRouter = testUtils.requireNoCache('../')({
+      url: 'foo.bar',
+      siteId: 1,
+      enableLinkTracking: true,
+      optionalTrackers: [],
+      optionalTrackersWebsiteId: []
+    });
+
+    assert.sameDeepMembers(window._paq, [
+      [ 'setSiteId', 1 ],
+      [ 'setTrackerUrl', 'http://foo.bar/piwik.php' ],
+      [ 'enableLinkTracking' ]
+    ]);
+  });
+
   it ('should correctly push the userId on instantiation', () => {
     const piwikReactRouter = testUtils.requireNoCache('../')({
       url: 'foo.bar',

@@ -77,6 +77,8 @@ var PiwikTracker = function(opts) {
 	opts.injectScript = ((opts.injectScript !== undefined) ? opts.injectScript : true);
 	opts.clientTrackerName = ((opts.clientTrackerName !== undefined) ? opts.clientTrackerName : 'piwik.js');
 	opts.serverTrackerName = ((opts.serverTrackerName !== undefined) ? opts.serverTrackerName : 'piwik.php');
+	opts.optionalTrackers = ((opts.optionalTrackers !== undefined) ? opts.optionalTrackers : []);
+	opts.optionalTrackersWebsiteId = ((opts.optionalTrackersWebsiteId !== undefined) ? opts.optionalTrackersWebsiteId : []);
 
 	var alreadyInitialized = piwikIsAlreadyInitialized();
 
@@ -219,6 +221,12 @@ var PiwikTracker = function(opts) {
 
 			push(['setSiteId', opts.siteId]);
 			push(['setTrackerUrl', u + opts.serverTrackerName]);
+
+			if (opts.optionalTrackers.length && opts.optionalTrackersWebsiteId.length ) {
+				for (var i in opts.optionalTrackers) {
+					push(['addTracker', opts.optionalTrackers[i], opts.optionalTrackersWebsiteId[i]]);
+				}
+			}
 		}
 
 		if (opts.userId) {
