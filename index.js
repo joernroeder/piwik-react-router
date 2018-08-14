@@ -179,11 +179,11 @@ var PiwikTracker = function(opts) {
 						applyModifierAndTrackLocation(modifier, location);
 		});
 
-				var initialLocation
+				var initialLocation;
 				if (history.location) {
-					initialLocation = history.location
+					initialLocation = history.location;
 				} else if (typeof history.getCurrentLocation === 'function') {
-					initialLocation = history.getCurrentLocation()
+					initialLocation = history.getCurrentLocation();
 				}
 
 				if (!opts.ignoreInitialVisit && initialLocation) {

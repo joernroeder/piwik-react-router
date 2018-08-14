@@ -510,6 +510,39 @@ describe('piwik-react-router client tests', function () {
       ]);
     });
 
+    it ('should correctly track the initial visit if opts.ignoreInitialVisit is disabled with React Router v3', ()  => {
+      const piwikReactRouter = testUtils.requireNoCache('../')({
+        url: 'foo.bar',
+        siteId: 1,
+      });
+
+      const unlistenFn = sinon.spy();
+      let listenStub = sinon.stub().returns(unlistenFn);
+
+      var object = { getCurrentLocation: function() {
+        return {
+          pathname: '/foo/bar.html',
+          search: '?foo=bar'
+        };
+      }}
+
+      const locationFn = sinon.spy(object, "getCurrentLocation");
+
+      const history = {
+        listen: listenStub,
+        getCurrentLocation: locationFn
+      };
+
+      piwikReactRouter.connectToHistory(history);
+
+      assert.includeDeepMembers(window._paq, [
+        [ 'setCustomUrl', '/foo/bar.html?foo=bar' ],
+        [ 'trackPageView' ]
+      ]);
+
+      assert.isTrue(locationFn.called);
+    });
+
     it ('should correctly ignore the initial visit if the appropriate option is enabled', () => {
       const piwikReactRouter = testUtils.requireNoCache('../')({
         url: 'foo.bar',
