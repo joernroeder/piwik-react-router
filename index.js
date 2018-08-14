@@ -179,8 +179,15 @@ var PiwikTracker = function(opts) {
 						applyModifierAndTrackLocation(modifier, location);
 		});
 
-				if (!opts.ignoreInitialVisit && history.location) {
-						applyModifierAndTrackLocation(modifier, history.location);
+				var initialLocation;
+				if (history.location) {
+					initialLocation = history.location;
+				} else if (typeof history.getCurrentLocation === 'function') {
+					initialLocation = history.getCurrentLocation();
+				}
+
+				if (!opts.ignoreInitialVisit && initialLocation) {
+					applyModifierAndTrackLocation(modifier, initialLocation);
 				}
 
 		return history;
