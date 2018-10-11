@@ -42,7 +42,7 @@
     "history": "^3.0.0 || ^4.0.0"
   },
   "dependencies": {
-    "url-join": "^1.1.0",
+    "url-join": "^4.0.0",
     "warning": "^3.0.0"
   },
   "devDependencies": {
